@@ -2,6 +2,7 @@ import React, { useContext } from 'react'
 import { View, Text, Button, StyleSheet, Alert, TouchableOpacity } from "react-native"
 import { auth } from "../firebaseConfig"
 import { AuthContext } from "../StateProvider"
+import { IconButton, Colors } from 'react-native-paper'
 
 export default function Profile() {
     const {currentUser} = useContext(AuthContext);
@@ -15,7 +16,8 @@ export default function Profile() {
     return (
         <View style={styles.container}>
             <Text>{"Hello, " + currentUser?.displayName}</Text>
-            <View style={styles.startButtonContainer}>
+            <IconButton style={styles.addButton} icon="plus" color={Colors.white} size={45} onPress={() => {Alert.alert("add movies")}}/>
+            <View style={styles.profileButtonContainer}>
                 <TouchableOpacity style={styles.buttonContainer} onPress={logout}>
                     <Text style={styles.buttonText}>Log Out</Text>
                 </TouchableOpacity>
@@ -48,9 +50,14 @@ const styles = StyleSheet.create({
         alignSelf: "center",
         textTransform: "uppercase"
     },
-    startButtonContainer: {
+    profileButtonContainer: {
         position: "absolute",
         bottom: 40,
         width: "80%",
+    },
+    addButton: {
+        position: "absolute",
+        top: 40,
+        right: -5
     }
 });
