@@ -3,13 +3,20 @@ import { View, Text, Button, StyleSheet, Alert, TouchableOpacity } from "react-n
 import { auth } from "../firebaseConfig"
 import { AuthContext } from "../StateProvider"
 import { IconButton, Colors } from 'react-native-paper'
+import { SearchBar } from 'react-native-elements'
 
 export default function SearchMovies({ navigation }) {
     const {currentUser} = useContext(AuthContext);
     return (
         <View style={styles.container}>
-            <Text>{"This is the movie search page"}</Text>
             <IconButton style={styles.backButton} icon="chevron-left" color={Colors.white} size={45} onPress={() => navigation.goBack()}/>
+            <SearchBar 
+                containerStyle={styles.searchBarContainer} 
+                platform="ios" 
+                cancelButtonTitle="Cancel" 
+                cancelButtonProps={{color:"#fff"}}
+                placeholder="Search movies and shows"
+            />
         </View>
     )
 }
@@ -47,5 +54,14 @@ const styles = StyleSheet.create({
         position: "absolute",
         top: 40,
         left: -5
-    }
+    },
+    searchBarContainer: {
+        position: "absolute",
+        top: 45,
+        left: 60,
+        width: "83%",
+        backgroundColor: "#f2784b",
+        borderBottomColor: "transparent",
+        borderTopColor: "transparent"
+    },
 });
