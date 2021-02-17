@@ -4,7 +4,7 @@ import { auth } from "../firebaseConfig"
 import { AuthContext } from "../StateProvider"
 import { IconButton, Colors } from 'react-native-paper'
 
-export default function Profile() {
+export default function Profile({ navigation }) {
     const {currentUser} = useContext(AuthContext);
 
     const logout = () => {
@@ -16,7 +16,8 @@ export default function Profile() {
     return (
         <View style={styles.container}>
             <Text>{"Hello, " + currentUser?.displayName}</Text>
-            <IconButton style={styles.addButton} icon="plus" color={Colors.white} size={45} onPress={() => {Alert.alert("add movies")}}/>
+            <IconButton style={styles.addButton} icon="plus" color={Colors.white} size={45} onPress={() => navigation.navigate("SearchMovies")}/>
+            <IconButton style={styles.homeButton} icon="home" color={Colors.white} size={45} onPress={() => navigation.navigate("Home")}/>
             <View style={styles.profileButtonContainer}>
                 <TouchableOpacity style={styles.buttonContainer} onPress={logout}>
                     <Text style={styles.buttonText}>Log Out</Text>
@@ -58,6 +59,11 @@ const styles = StyleSheet.create({
     addButton: {
         position: "absolute",
         top: 40,
-        right: -5
+        right: 5
+    },
+    homeButton: {
+        position: "absolute",
+        top: 40,
+        left: 5
     }
 });
