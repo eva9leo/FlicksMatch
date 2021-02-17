@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { View, Text, Button, StyleSheet, Alert, TouchableOpacity } from "react-native"
 import { auth } from "../firebaseConfig"
 import { AuthContext } from "../StateProvider"
@@ -7,6 +7,8 @@ import { SearchBar } from 'react-native-elements'
 
 export default function SearchMovies({ navigation }) {
     const {currentUser} = useContext(AuthContext);
+    const [query, setQuery] = useState("");
+
     return (
         <View style={styles.container}>
             <IconButton style={styles.backButton} icon="chevron-left" color={Colors.white} size={45} onPress={() => navigation.goBack()}/>
@@ -16,6 +18,9 @@ export default function SearchMovies({ navigation }) {
                 cancelButtonTitle="Cancel" 
                 cancelButtonProps={{color:"#fff"}}
                 placeholder="Search movies and shows"
+                onChangeText={e => setQuery(e)}
+                value={query}
+                onSubmitEditing={() => {Alert.alert(encodeURI(query))}}
             />
         </View>
     )
