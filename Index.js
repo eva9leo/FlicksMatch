@@ -9,7 +9,7 @@ import Home from "./src/Home";
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { AuthProvider, AuthContext } from "./StateProvider";
-import SearchMovies from "./src/SearchMovies"
+import SearchContents from "./src/SearchContents"
 
 export default function Index() {
   let isSignedIn = false;
@@ -24,7 +24,7 @@ export default function Index() {
             <>
               <Stack.Screen name="Profile" component={Profile} ></Stack.Screen>
               <Stack.Screen name="Home" component={Home} ></Stack.Screen>
-              <Stack.Screen name="SearchMovies" component={SearchMovies}></Stack.Screen>
+              <Stack.Screen name="SearchContents" component={SearchContents}></Stack.Screen>
             </>
           ) : (
             <>

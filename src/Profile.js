@@ -16,7 +16,7 @@ export default function Profile({ navigation }) {
     return (
         <View style={styles.container}>
             <Text>{"Hello, " + currentUser?.displayName}</Text>
-            <IconButton style={styles.addButton} icon="plus" color={Colors.white} size={45} onPress={() => navigation.navigate("SearchMovies")}/>
+            <IconButton style={styles.addButton} icon="plus" color={Colors.white} size={45} onPress={() => navigation.navigate("SearchContents")}/>
             <IconButton style={styles.homeButton} icon="home" color={Colors.white} size={45} onPress={() => navigation.navigate("Home")}/>
             <View style={styles.profileButtonContainer}>
                 <TouchableOpacity style={styles.buttonContainer} onPress={logout}>
