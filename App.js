@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { AuthProvider } from "./StateProvider"
-import Index from "./Index"
+import { AuthProvider } from "./src/StateProvider"
+import Index from "./src/Index"
 
 export default function App() {
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
-import { auth } from "../firebaseConfig";
+import { auth } from "./firebaseConfig";
 import { useNavigation } from '@react-navigation/native';
 
 export default function RegisterForm() {

@@ -1,15 +1,15 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, Alert } from 'react-native';
-import Login from "./src/Login";
-import Start from "./src/Start";
-import Register from "./src/Register";
-import Profile from "./src/Profile";
-import Home from "./src/Home";
+import Login from "./Login";
+import Start from "./Start";
+import Register from "./Register";
+import Profile from "./Profile";
+import Home from "./Home";
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { AuthProvider, AuthContext } from "./StateProvider";
-import SearchContents from "./src/SearchContents"
+import SearchContents from "./SearchContents"
 
 export default function Index() {
   let isSignedIn = false;

@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { View, Text, Button, StyleSheet, Alert, TouchableOpacity } from "react-native"
-import { auth } from "../firebaseConfig"
-import { AuthContext } from "../StateProvider"
+import { auth } from "./firebaseConfig"
+import { AuthContext } from "./StateProvider"
 import { IconButton, Colors } from 'react-native-paper'
 
 export default function Home({ navigation }) {
