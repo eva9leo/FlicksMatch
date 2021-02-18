@@ -70,26 +70,27 @@ export default function SearchContents({ navigation }) {
                 value={query}
                 onSubmitEditing={() => {searchMovies(); searchTv();}}
             />
-            {/* <View style={styles.resultsContainer} >
-                <SearchResults type="Movies"/>
-                <SearchResults type="TV Shows"/>
-            </View> */}
             <SafeAreaView style={styles.resultsContainer}>
                 <FlatList 
                     style={{}}
+                    initialNumToRender={9}
                     numColumns={3}
                     data={ [ ...moveisState.movieResults, ...moveisState.tvResults] }
                     keyExtractor={item => item.id + ''}
                     renderItem={({ item }) => {
                         return (
-                        <TouchableOpacity onPress={() => {Alert.alert(item.title ? item.title : item.name)}}>
+                        <TouchableOpacity 
+                            onPress={() => {Alert.alert(item.title ? item.title : item.name)}} 
+                            activeOpacity={1}
+                            style={ styles.touchContainer }
+                        >
                             <View style={styles.resultContainer}>
-                            <Image 
-                                source={item.poster_path ? {uri: imgUrl + item.poster_path} : require("../assets/placeholder.png")} 
-                                style={{ height: 250, width: "100%", resizeMode: "contain"}}
-                                
-                            />
-                        </View>
+                                <Image 
+                                    source={item.poster_path ? {uri: imgUrl + item.poster_path} : require("../assets/placeholder.png")} 
+                                    style={{ height: 250, width: "100%", resizeMode: "contain"}}
+                                    
+                                />
+                            </View>
                         </TouchableOpacity>
                         );
                     }}
@@ -126,11 +127,15 @@ const styles = StyleSheet.create({
         marginTop: 130,
         flex: 1, 
         width: "100%",
-        justifyContent: "center"
+        alignItems: 'center'
     },
     resultContainer: {
-        height: 300, 
-        width: 150, 
+        height: '100%', 
+        width: '100%', 
         flex: 1
+    },
+    touchContainer: {
+        width: '30%',
+        height: '40%'
     }
 });
