@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
       width: '100%',
-      height: '100%',
+      height: '90%',
       backgroundColor: '#C1C1C1',
       justifyContent: 'center',
       alignItems: 'center'
