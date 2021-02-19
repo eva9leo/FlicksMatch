@@ -1,13 +1,14 @@
-import React, { useContext, useState } from 'react'
+import React, { useCallback, useContext, useState } from 'react'
 import { View, Text, Button, StyleSheet, Alert, TouchableOpacity, FlatList, Image, SafeAreaView } from "react-native"
 // import { AuthContext } from "./StateProvider"
 import { IconButton, Colors } from 'react-native-paper'
 import { SearchBar } from 'react-native-elements'
 import { TMDB_KEY } from "@env"
+import ResultBox from './components/ResultBox'
 
 export default function SearchContents({ navigation }) {
     // const {currentUser} = useContext(AuthContext);
-    const imgUrl = "https://image.tmdb.org/t/p/original";
+    const imgUrl = "https://image.tmdb.org/t/p/w185";
     const [query, setQuery] = useState("");
     const [moveisState, setMoviesState] = useState({
         movieResults: [],
@@ -51,6 +52,15 @@ export default function SearchContents({ navigation }) {
         })
     }
 
+    const selectHandler = () => {
+        alert("Hello")
+    }
+
+    const keyExtractor = useCallback((item) => item.id.toString(), []);
+    const renderItem = useCallback(
+        ({ item }) => <ResultBox name={item.name} posterPath={item.poster_path} title={item.title}/>, []
+    );
+
     return (
         <View style={styles.container}>
             <IconButton 
@@ -76,29 +86,53 @@ export default function SearchContents({ navigation }) {
                     initialNumToRender={9}
                     numColumns={3}
                     data={ [ ...moveisState.movieResults, ...moveisState.tvResults] }
-                    keyExtractor={item => item.id + ''}
-                    renderItem={({ item }) => {
-                        return (
-                        <TouchableOpacity 
-                            onPress={() => {Alert.alert(item.title ? item.title : item.name)}} 
-                            activeOpacity={1}
-                            style={ styles.touchContainer }
-                        >
-                            <View style={styles.resultContainer}>
-                                <Image 
-                                    source={item.poster_path ? {uri: imgUrl + item.poster_path} : require("../assets/placeholder.png")} 
-                                    style={{ height: 250, width: "100%", resizeMode: "contain"}}
+                    keyExtractor={keyExtractor}
+                    // legacyImplementation={true}
+                    // maxToRenderPerBatch={40}
+                    renderItem={ renderItem
+                    //     ({ item }) => {
+                    //     return (
+                    //     <TouchableOpacity 
+                    //         onPress={() => selectHandler()} 
+                    //         activeOpacity={1}
+                    //         style={ styles.touchContainer }
+                    //     >
+                    //         <View style={styles.resultContainer}>
+                    //             <Image 
+                    //                 source={item.poster_path ? {uri: imgUrl + item.poster_path} : require("../assets/placeholder.png")} 
+                    //                 style={{ height: 250, width: "100%", resizeMode: "contain"}}
                                     
-                                />
-                            </View>
-                        </TouchableOpacity>
-                        );
-                    }}
+                    //             />
+                    //             <Text>{item.title ? item.title : item.name}</Text>
+                    //         </View>
+                    //     </TouchableOpacity>
+                    //     );
+                    // }
+                }
                 />
             </SafeAreaView>
         </View>
     )
 }
+
+// class GridItem extends React.PureComponent {
+//     render() {
+//         return (
+//             <TouchableOpacity 
+//                 onPress={() => {Alert.alert(this.props.title ? this.props.title : this.props.name)}} 
+//                 activeOpacity={1}
+//                 style={ styles.touchContainer }
+//             >
+//                 <View style={styles.resultContainer}>
+//                     <Image 
+//                         source={this.props.posterPath ? {uri: imgUrl + this.props.posterPath} : require("../assets/placeholder.png")} 
+//                         style={{ height: 250, width: "100%", resizeMode: "contain"}}            
+//                     />
+//                 </View>
+//             </TouchableOpacity>
+//         );
+//     }
+// }
 
 const styles = StyleSheet.create({
     container: {
