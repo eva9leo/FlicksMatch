@@ -4,15 +4,14 @@ import { IconButton, Colors } from 'react-native-paper'
 import { SearchBar } from 'react-native-elements'
 import { TMDB_KEY } from "@env"
 import ResultBox from './components/ResultBox'
+import { useStateValue } from './StateProvider';
 
 export default function SearchContents({ navigation }) {
+    const [{ searches }, dispatch] = useStateValue();
+
     const imgUrl = "https://image.tmdb.org/t/p/w185";
     const [query, setQuery] = useState("");
-    const [moveisState, setMoviesState] = useState({
-        movieResults: [],
-        tvResults: [],
-        selected: {}
-    });
+
     const searchMovies = async () => {
         fetch(
             "https://api.themoviedb.org/3/search/movie?api_key=" + 
@@ -22,8 +21,9 @@ export default function SearchContents({ navigation }) {
             "&page=1&include_adult=false"
         ).then((response) => response.json())
         .then((json) => {
-            setMoviesState(prevState => {
-                return { ...prevState, movieResults: json.results }
+            dispatch({
+                type: "ADD_SEARCHES",
+                item: json.results
             })
         })
         .catch((error) => {
@@ -39,9 +39,9 @@ export default function SearchContents({ navigation }) {
             "&page=1&include_adult=false"
         ).then((response) => response.json())
         .then((json) => {
-            // console.log(json.results)
-            setMoviesState(prevState => {
-                return { ...prevState, tvResults: json.results }
+            dispatch({
+                type: "ADD_SEARCHES",
+                item: json.results
             })
         })
         .catch((error) => {
@@ -65,7 +65,12 @@ export default function SearchContents({ navigation }) {
                 icon="chevron-left" 
                 color={Colors.white} 
                 size={45} 
-                onPress={() => navigation.goBack()}
+                onPress={() => {
+                    dispatch({
+                        type: "CLEAR_SEARCHES"
+                    })
+                    navigation.goBack();
+                }}
             />
             <SearchBar 
                 containerStyle={styles.searchBarContainer} 
@@ -75,14 +80,17 @@ export default function SearchContents({ navigation }) {
                 placeholder="Search movies and shows"
                 onChangeText={e => setQuery(e)}
                 value={query}
-                onSubmitEditing={() => {searchMovies(); searchTv();}}
+                onSubmitEditing={() => {
+                    searchMovies()
+                    searchTv();
+                }}
             />
             <SafeAreaView style={styles.resultsContainer}>
                 <FlatList 
                     style={{}}
                     initialNumToRender={9}
                     numColumns={3}
-                    data={ [ ...moveisState.movieResults, ...moveisState.tvResults] }
+                    data={ searches }
                     keyExtractor={keyExtractor}
                     // legacyImplementation={true}
                     // maxToRenderPerBatch={40}

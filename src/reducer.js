@@ -1,6 +1,7 @@
 export const initialState = {
     likes: [],
     user: null,
+    searches: [],
 };
 
 export default function reducer(state, action) {
@@ -15,6 +16,16 @@ export default function reducer(state, action) {
                 ...state,
                 user: action.user
             };
+        case "ADD_SEARCHES":
+            return {
+                ...state,
+                searches: [ ...state.searches, ...action.item]
+            }
+        case "CLEAR_SEARCHES":
+            return {
+                ...state,
+                searches: []
+            }
         default:
             return state;
     }

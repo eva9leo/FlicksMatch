@@ -11,6 +11,9 @@ export default function LoginForm() {
     const signIn = e => {
         e.preventDefault();
         auth.signInWithEmailAndPassword(email, password)
+            // .then(() => {
+            //     navigation.navigate("Home")
+            // })
             .catch(error => Alert.alert(error.message))
     }
 

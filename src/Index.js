@@ -8,7 +8,6 @@ import Profile from "./Profile";
 import Home from "./Home";
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-// import { AuthProvider, AuthContext } from "./StateProvider";
 import { useStateValue } from './StateProvider';
 import { auth } from './firebaseConfig';
 
@@ -34,8 +33,6 @@ export default function Index() {
       }
     })
   }, [])
-
-  // const {currentUser} = useContext(AuthContext);
 
   return (
       <NavigationContainer>
