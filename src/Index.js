@@ -6,11 +6,11 @@ import Start from "./Start";
 import Register from "./Register";
 import Profile from "./Profile";
 import Home from "./Home";
+import MediaScreen from "./MediaScreen";
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useStateValue } from './StateProvider';
 import { auth } from './firebaseConfig';
-
 import SearchContents from "./SearchContents"
 
 export default function Index() {
@@ -39,9 +39,10 @@ export default function Index() {
         <Stack.Navigator screenOptions={{headerShown: false, gestureEnabled: false}}>
           {user ? (
             <>
-              <Stack.Screen name="Profile" component={Profile} ></Stack.Screen>
-              <Stack.Screen name="Home" component={Home} ></Stack.Screen>
-              <Stack.Screen name="SearchContents" component={SearchContents}></Stack.Screen>
+              <Stack.Screen name="Profile" component={Profile} />
+              <Stack.Screen name="Home" component={Home} />
+              <Stack.Screen name="SearchContents" component={SearchContents} />
+              <Stack.Screen name="MediaScreen" component={MediaScreen} />
             </>
           ) : (
             <>
