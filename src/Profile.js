@@ -1,21 +1,23 @@
 import React, { useContext } from 'react'
 import { View, Text, Button, StyleSheet, Alert, TouchableOpacity } from "react-native"
 import { auth } from "./firebaseConfig"
-import { AuthContext } from "./StateProvider"
+// import { AuthContext } from "./StateProvider"
+import { useStateValue } from './StateProvider'
 import { IconButton, Colors } from 'react-native-paper'
 
 export default function Profile({ navigation }) {
-    const {currentUser} = useContext(AuthContext);
+    // const {currentUser} = useContext(AuthContext);
+    const [{ user }, dispatch] = useStateValue();
 
     const logout = () => {
-        if (currentUser) {
+        if (user) {
             auth.signOut()
         }
     }
 
     return (
         <View style={styles.container}>
-            <Text>{"Hello, " + currentUser?.displayName}</Text>
+            <Text>{"Hello, " + user?.displayName}</Text>
             <IconButton style={styles.addButton} icon="plus" color={Colors.white} size={45} onPress={() => navigation.navigate("SearchContents")}/>
             <IconButton style={styles.homeButton} icon="home" color={Colors.white} size={45} onPress={() => navigation.navigate("Home")}/>
             <View style={styles.profileButtonContainer}>

@@ -1,12 +1,12 @@
 import React, { useContext, useState } from 'react'
 import { View, Text, Button, StyleSheet, Alert, TouchableOpacity, FlatList, Image, SafeAreaView } from "react-native"
-import { AuthContext } from "./StateProvider"
+// import { AuthContext } from "./StateProvider"
 import { IconButton, Colors } from 'react-native-paper'
 import { SearchBar } from 'react-native-elements'
 import { TMDB_KEY } from "@env"
 
 export default function SearchContents({ navigation }) {
-    const {currentUser} = useContext(AuthContext);
+    // const {currentUser} = useContext(AuthContext);
     const imgUrl = "https://image.tmdb.org/t/p/original";
     const [query, setQuery] = useState("");
     const [moveisState, setMoviesState] = useState({

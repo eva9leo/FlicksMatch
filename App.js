@@ -1,14 +1,19 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { AuthProvider } from "./src/StateProvider"
+// import { AuthProvider } from "./src/StateProvider"
+import { StateProvider } from './src/StateProvider'
+import reducer, { initialState } from './src/reducer'
 import Index from "./src/Index"
 
 export default function App() {
 
   return (
-    <AuthProvider>
+    // <AuthProvider>
+    //   <Index/>
+    // </AuthProvider>
+    <StateProvider initialState={initialState} reducer={reducer}>
       <Index/>
-    </AuthProvider>
+    </StateProvider>
   );
 }
 

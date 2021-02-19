@@ -8,19 +8,39 @@ import Profile from "./Profile";
 import Home from "./Home";
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { AuthProvider, AuthContext } from "./StateProvider";
+// import { AuthProvider, AuthContext } from "./StateProvider";
+import { useStateValue } from './StateProvider';
+import { auth } from './firebaseConfig';
+
 import SearchContents from "./SearchContents"
 
 export default function Index() {
-  let isSignedIn = false;
   const Stack = createStackNavigator();
 
-  const {currentUser} = useContext(AuthContext);
+  const [{ user }, dispatch] = useStateValue();
+  
+  useEffect(() => {
+    auth.onAuthStateChanged(authUser => {
+      if (authUser) {
+        dispatch({
+          type: 'SET_USER',
+          user: authUser
+        });
+      } else {
+        dispatch({
+          type: 'SET_USER',
+          user: null
+        });
+      }
+    })
+  }, [])
+
+  // const {currentUser} = useContext(AuthContext);
 
   return (
       <NavigationContainer>
         <Stack.Navigator screenOptions={{headerShown: false, gestureEnabled: false}}>
-          {currentUser ? (
+          {user ? (
             <>
               <Stack.Screen name="Profile" component={Profile} ></Stack.Screen>
               <Stack.Screen name="Home" component={Home} ></Stack.Screen>
