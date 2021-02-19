@@ -16,7 +16,14 @@ export default function Profile({ navigation }) {
     return (
         <View style={styles.container}>
             <Text>{"Hello, " + user?.displayName}</Text>
-            <IconButton style={styles.addButton} icon="plus" color={Colors.white} size={45} onPress={() => navigation.navigate("SearchContents")}/>
+            <IconButton style={styles.addButton} icon="plus" color={Colors.white} size={45} onPress={() => 
+                {
+                    dispatch({
+                        type: "CLEAR_SEARCHES"
+                    })
+                    navigation.navigate("SearchContents")
+                }
+                }/>
             <IconButton style={styles.homeButton} icon="home" color={Colors.white} size={45} onPress={() => navigation.navigate("Home")}/>
             <View style={styles.profileButtonContainer}>
                 <TouchableOpacity style={styles.buttonContainer} onPress={logout}>

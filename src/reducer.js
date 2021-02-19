@@ -2,6 +2,7 @@ export const initialState = {
     likes: [],
     user: null,
     searches: [],
+    selected: null
 };
 
 export default function reducer(state, action) {
@@ -25,6 +26,11 @@ export default function reducer(state, action) {
             return {
                 ...state,
                 searches: []
+            }
+        case "SET_SELECTED":
+            return {
+                ...state,
+                selected: action.item
             }
         default:
             return state;

@@ -9,7 +9,7 @@ import { useStateValue } from './StateProvider';
 export default function SearchContents({ navigation }) {
     const [{ searches }, dispatch] = useStateValue();
 
-    const imgUrl = "https://image.tmdb.org/t/p/w300";
+    const imgUrl = "https://image.tmdb.org/t/p/w185";
     const [query, setQuery] = useState("");
 
     const searchMovies = async () => {
@@ -55,7 +55,7 @@ export default function SearchContents({ navigation }) {
 
     const keyExtractor = useCallback((item) => item.id.toString(), []);
     const renderItem = useCallback(
-        ({ item }) => <ResultBox item={item} navigation={ navigation }/>, []
+        ({ item }) => <ResultBox item={item} navigation={ navigation } dispatch={ dispatch }/>, []
     );
 
     return (
@@ -66,9 +66,6 @@ export default function SearchContents({ navigation }) {
                 color={Colors.white} 
                 size={45} 
                 onPress={() => {
-                    dispatch({
-                        type: "CLEAR_SEARCHES"
-                    })
                     navigation.goBack();
                 }}
             />

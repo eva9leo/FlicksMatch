@@ -1,8 +1,11 @@
 import React from 'react'
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { IconButton, Colors } from 'react-native-paper'
+import { useStateValue } from './StateProvider';
 
 export default function MediaScreen({ navigation }) {
+    const [{ selected }, dispatch] = useStateValue();
+
     return (
         <View style={styles.container}>
             <IconButton 
@@ -11,13 +14,10 @@ export default function MediaScreen({ navigation }) {
                 color={Colors.white} 
                 size={45} 
                 onPress={() => {
-                    // dispatch({
-                    //     type: "CLEAR_SEARCHES"
-                    // })
                     navigation.goBack();
                 }}
             />
-            <Text>{'This is the media screen'}</Text>
+            <Text>{selected.title ? selected.title : selected.name}</Text>
         </View>
     )
 }

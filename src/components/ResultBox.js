@@ -1,17 +1,20 @@
 import React, { PureComponent } from 'react';
 import { View, Text, StyleSheet, Alert, TouchableOpacity, Image } from "react-native";
-// import { useNavigation } from '@react-navigation/native';
 
 const imgUrl = "https://image.tmdb.org/t/p/w185";
-// const navigation = useNavigation();
 
 class ResultBox extends PureComponent {
   render() {
     return (
       <TouchableOpacity 
-          onPress={() => {this.props.navigation.navigate("MediaScreen")}} 
+          onPress={() => {
+              this.props.dispatch({
+                  type: "SET_SELECTED",
+                  item: this.props.item
+              })
+              this.props.navigation.navigate("MediaScreen");
+            }} 
           activeOpacity={1}
-        //   style={ styles.touchContainer }
       >
           <View style={styles.resultContainer}>
               {this.props.item.poster_path ? (
