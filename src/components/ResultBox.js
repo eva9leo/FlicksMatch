@@ -12,10 +12,22 @@ class ResultBox extends PureComponent {
         //   style={ styles.touchContainer }
       >
           <View style={styles.resultContainer}>
-              <Image 
-                  source={this.props.posterPath ? {uri: imgUrl + this.props.posterPath} : require("../../assets/placeholder.png")} 
-                  style={{ height: 250, width: "100%", resizeMode: "contain"}}
-              />
+              {this.props.posterPath ? (
+                <Image 
+                    source={{uri: imgUrl + this.props.posterPath}} 
+                    style={{ height: 250, width: "100%", resizeMode: "contain"}}
+                />
+              ) : (
+                
+                <View style={styles.titleContainer}>
+                    <Text 
+                    adjustsFontSizeToFit
+                    numberOfLines={4}
+                    style={styles.titleText}>
+                        {this.props.title ? this.props.title : this.props.name}
+                    </Text>
+                </View>
+              )}
           </View>
       </TouchableOpacity>
       );
@@ -54,11 +66,20 @@ const styles = StyleSheet.create({
   resultContainer: {
       height: 200, 
       width: 120, 
-      flex: 1
+      flex: 1,
+      justifyContent: 'center'
   },
-  touchContainer: {
-      width: '30%',
-      height: '40%'
+  titleText: {
+      fontSize: 30,
+      textAlign: 'center',
+      justifyContent: 'center'
+  },
+  titleContainer: {
+      width: '100%',
+      height: '100%',
+      backgroundColor: '#C1C1C1',
+      justifyContent: 'center',
+      alignItems: 'center'
   }
 });
 
