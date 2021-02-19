@@ -5,6 +5,8 @@ import { SearchBar } from 'react-native-elements'
 import { TMDB_KEY } from "@env"
 import ResultBox from './components/ResultBox'
 import { useStateValue } from './StateProvider';
+import { LinearGradient } from 'expo-linear-gradient'
+import MaskedView from '@react-native-masked-view/masked-view';
 
 export default function SearchContents({ navigation }) {
     const [{ searches }, dispatch] = useStateValue();
@@ -85,19 +87,29 @@ export default function SearchContents({ navigation }) {
                     searchTv();
                 }}
             />
-            <SafeAreaView style={styles.resultsContainer}>
-                <FlatList 
-                    style={{}}
-                    initialNumToRender={9}
-                    numColumns={3}
-                    data={ searches }
-                    keyExtractor={keyExtractor}
-                    // legacyImplementation={true}
-                    // maxToRenderPerBatch={40}
-                    renderItem={ renderItem
-                }
-                />
-            </SafeAreaView>
+            <MaskedView 
+                style={styles.maskContainerTop}
+                maskElement={ <LinearGradient style={styles.fadeContainer} colors={['transparent', 'black'] } locations={[0.055, 0.075]} /> }
+            >
+                <MaskedView 
+                style={styles.maskContainerBottom}
+                maskElement={ <LinearGradient style={styles.fadeContainer} colors={['black', 'transparent'] } locations={[0.93, 0.95]} /> }
+                >
+                <SafeAreaView style={styles.resultsContainer}>
+                    <FlatList 
+                        style={{}}
+                        initialNumToRender={9}
+                        numColumns={3}
+                        data={ searches }
+                        keyExtractor={keyExtractor}
+                        renderItem={ renderItem }
+                        style={{ paddingTop: 15}}
+                        showsVerticalScrollIndicator={false}
+                        
+                    />
+                </SafeAreaView>
+                </MaskedView>
+            </MaskedView>
         </View>
     )
 }
@@ -126,7 +138,7 @@ const styles = StyleSheet.create({
         borderTopColor: "transparent"
     },
     resultsContainer: {
-        marginTop: 130,
+        marginTop: 25,
         flex: 1, 
         width: "100%",
         alignItems: 'center'
@@ -139,5 +151,21 @@ const styles = StyleSheet.create({
     touchContainer: {
         width: '30%',
         height: '40%'
-    }
+    },
+    maskContainerTop: {
+        marginTop: 100,
+        flex: 1, 
+        width: "100%",
+        alignItems: 'center'
+    },
+    fadeContainer: {
+        flex: 1, 
+        width: "100%",
+        alignItems: 'center'
+    },
+    maskContainerBottom: {
+        flex: 1, 
+        width: "100%",
+        alignItems: 'center'
+    },
 });

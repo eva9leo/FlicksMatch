@@ -15,6 +15,7 @@ class ResultBox extends PureComponent {
               this.props.navigation.navigate("MediaScreen");
             }} 
           activeOpacity={1}
+          style={{padding: 2}}
       >
           <View style={styles.resultContainer}>
               {this.props.item.poster_path ? (
