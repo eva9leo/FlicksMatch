@@ -1,12 +1,10 @@
 import React, { useContext } from 'react'
 import { View, Text, Button, StyleSheet, Alert, TouchableOpacity } from "react-native"
 import { auth } from "./firebaseConfig"
-// import { AuthContext } from "./StateProvider"
 import { useStateValue } from './StateProvider'
 import { IconButton, Colors } from 'react-native-paper'
 
 export default function Profile({ navigation }) {
-    // const {currentUser} = useContext(AuthContext);
     const [{ user }, dispatch] = useStateValue();
 
     const logout = () => {

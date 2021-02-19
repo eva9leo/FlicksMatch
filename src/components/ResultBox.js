@@ -7,14 +7,14 @@ class ResultBox extends PureComponent {
   render() {
     return (
       <TouchableOpacity 
-          onPress={() => {Alert.alert(this.props.title ? this.props.title : this.props.name)}} 
+          onPress={() => {Alert.alert(this.props.item.title ? this.props.item.title : this.props.item.name)}} 
           activeOpacity={1}
         //   style={ styles.touchContainer }
       >
           <View style={styles.resultContainer}>
-              {this.props.posterPath ? (
+              {this.props.item.poster_path ? (
                 <Image 
-                    source={{uri: imgUrl + this.props.posterPath}} 
+                    source={{uri: imgUrl + this.props.item.poster_path}} 
                     style={{ height: 250, width: "100%", resizeMode: "contain"}}
                 />
               ) : (
@@ -24,7 +24,7 @@ class ResultBox extends PureComponent {
                     adjustsFontSizeToFit
                     numberOfLines={4}
                     style={styles.titleText}>
-                        {this.props.title ? this.props.title : this.props.name}
+                        {this.props.item.title ? this.props.item.title : this.props.item.name}
                     </Text>
                 </View>
               )}

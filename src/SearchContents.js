@@ -1,13 +1,11 @@
 import React, { useCallback, useContext, useState } from 'react'
 import { View, Text, Button, StyleSheet, Alert, TouchableOpacity, FlatList, Image, SafeAreaView } from "react-native"
-// import { AuthContext } from "./StateProvider"
 import { IconButton, Colors } from 'react-native-paper'
 import { SearchBar } from 'react-native-elements'
 import { TMDB_KEY } from "@env"
 import ResultBox from './components/ResultBox'
 
 export default function SearchContents({ navigation }) {
-    // const {currentUser} = useContext(AuthContext);
     const imgUrl = "https://image.tmdb.org/t/p/w185";
     const [query, setQuery] = useState("");
     const [moveisState, setMoviesState] = useState({
@@ -24,7 +22,6 @@ export default function SearchContents({ navigation }) {
             "&page=1&include_adult=false"
         ).then((response) => response.json())
         .then((json) => {
-            // console.log(json.results)
             setMoviesState(prevState => {
                 return { ...prevState, movieResults: json.results }
             })
@@ -58,7 +55,7 @@ export default function SearchContents({ navigation }) {
 
     const keyExtractor = useCallback((item) => item.id.toString(), []);
     const renderItem = useCallback(
-        ({ item }) => <ResultBox name={item.name} posterPath={item.poster_path} title={item.title}/>, []
+        ({ item }) => <ResultBox item={item}/>, []
     );
 
     return (
@@ -90,49 +87,12 @@ export default function SearchContents({ navigation }) {
                     // legacyImplementation={true}
                     // maxToRenderPerBatch={40}
                     renderItem={ renderItem
-                    //     ({ item }) => {
-                    //     return (
-                    //     <TouchableOpacity 
-                    //         onPress={() => selectHandler()} 
-                    //         activeOpacity={1}
-                    //         style={ styles.touchContainer }
-                    //     >
-                    //         <View style={styles.resultContainer}>
-                    //             <Image 
-                    //                 source={item.poster_path ? {uri: imgUrl + item.poster_path} : require("../assets/placeholder.png")} 
-                    //                 style={{ height: 250, width: "100%", resizeMode: "contain"}}
-                                    
-                    //             />
-                    //             <Text>{item.title ? item.title : item.name}</Text>
-                    //         </View>
-                    //     </TouchableOpacity>
-                    //     );
-                    // }
                 }
                 />
             </SafeAreaView>
         </View>
     )
 }
-
-// class GridItem extends React.PureComponent {
-//     render() {
-//         return (
-//             <TouchableOpacity 
-//                 onPress={() => {Alert.alert(this.props.title ? this.props.title : this.props.name)}} 
-//                 activeOpacity={1}
-//                 style={ styles.touchContainer }
-//             >
-//                 <View style={styles.resultContainer}>
-//                     <Image 
-//                         source={this.props.posterPath ? {uri: imgUrl + this.props.posterPath} : require("../assets/placeholder.png")} 
-//                         style={{ height: 250, width: "100%", resizeMode: "contain"}}            
-//                     />
-//                 </View>
-//             </TouchableOpacity>
-//         );
-//     }
-// }
 
 const styles = StyleSheet.create({
     container: {
