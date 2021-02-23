@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
-import { auth } from "./firebaseConfig";
+import { auth, db } from "./firebaseConfig";
 import { useNavigation } from '@react-navigation/native';
 
 export default function RegisterForm() {
@@ -18,12 +18,11 @@ export default function RegisterForm() {
                     result.user.updateProfile({
                         displayName: firstName + " " + lastName
                     });
-                    // navigation.navigate("Profile")
+                    db.collection('users').doc(result.user.uid).set({
+                        watched: []
+                    });
                 }
-            }).then(() => {
-                navigation.navigate("Profile")
-            })
-            .catch(error => Alert.alert(error.message))
+            }).catch(error => Alert.alert(error.message))
     }
 
     return (
