@@ -15,7 +15,7 @@ export default function Profile({ navigation }) {
 
     return (
         <View style={styles.container}>
-            <Text>{"Hello, " + user?.displayName}</Text>
+            {/* <Text>{"Hello, " + user?.displayName}</Text> */}
             <IconButton style={styles.addButton} icon="plus" color={Colors.white} size={45} onPress={() => 
                 {
                     dispatch({

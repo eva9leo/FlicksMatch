@@ -8,9 +8,6 @@ import Index from "./src/Index"
 export default function App() {
 
   return (
-    // <AuthProvider>
-    //   <Index/>
-    // </AuthProvider>
     <StateProvider initialState={initialState} reducer={reducer}>
       <Index/>
     </StateProvider>

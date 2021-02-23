@@ -15,11 +15,14 @@ export default function RegisterForm() {
         auth.createUserWithEmailAndPassword(email, password)
             .then((result) => {
                 if (result) {
-                    result.user.updateProfile({
-                        displayName: firstName + " " + lastName
-                    });
+                    // result.user.updateProfile({
+                    //     displayName: firstName + " " + lastName
+                    // })
                     db.collection('users').doc(result.user.uid).set({
-                        watched: []
+                        firstName: firstName,
+                        lastName: lastName,
+                        watched: [],
+                        shows: []
                     });
                 }
             }).catch(error => Alert.alert(error.message))

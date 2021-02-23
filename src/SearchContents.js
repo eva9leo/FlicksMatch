@@ -23,16 +23,6 @@ export default function SearchContents({ navigation }) {
             "&page=1&include_adult=false"
         ).then((response) => response.json())
         .then((json) => {
-            // const newArray = json.results.map((item) => {
-            //     return {
-            //         id: item.id,
-            //         name: item.name,
-            //         title: item.title,
-            //         poster_path: item.poster_path,
-            //         overview: item.overview,
-            //         vote_average: vote_average
-            //     }
-            // })
             dispatch({
                 type: "ADD_SEARCHES",
                 item: json.results.map((item) => {
@@ -42,7 +32,8 @@ export default function SearchContents({ navigation }) {
                         title: item.title,
                         poster_path: item.poster_path,
                         overview: item.overview,
-                        vote_average: item.vote_average
+                        vote_average: item.vote_average,
+                        type: 'movie'
                     }
                 })
             })
@@ -69,7 +60,8 @@ export default function SearchContents({ navigation }) {
                         title: item.title,
                         poster_path: item.poster_path,
                         overview: item.overview,
-                        vote_average: item.vote_average
+                        vote_average: item.vote_average,
+                        type: 'tv'
                     }
                 })
             })

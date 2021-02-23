@@ -10,7 +10,7 @@ import MediaScreen from "./MediaScreen";
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useStateValue } from './StateProvider';
-import { auth } from './firebaseConfig';
+import { auth, db } from './firebaseConfig';
 import SearchContents from "./SearchContents"
 
 export default function Index() {
@@ -31,8 +31,17 @@ export default function Index() {
           user: null
         });
       }
-    })
-  }, [])
+    });
+  }, []);
+
+  useEffect(() => {
+    if (user) {
+      // console.log('${user.uid}');
+      db.collection('users').doc(user.uid).onSnapshot((doc) => {
+        console.log(doc.data())
+      });
+    }
+  }, [user]);
 
   return (
       <NavigationContainer>
