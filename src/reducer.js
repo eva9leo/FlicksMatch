@@ -1,5 +1,5 @@
 export const initialState = {
-    likes: [],
+    watched: [],
     user: null,
     searches: [],
     selected: null
