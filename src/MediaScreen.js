@@ -1,11 +1,12 @@
 import React from 'react'
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Alert } from 'react-native';
 import { IconButton, Colors } from 'react-native-paper'
 import { useStateValue } from './StateProvider';
 
 export default function MediaScreen({ navigation }) {
     const [{ selected }, dispatch] = useStateValue();
     const imgUrl = "https://image.tmdb.org/t/p/original";
+    console.log(selected)
 
     return (
         <View style={styles.container}>
@@ -18,10 +19,19 @@ export default function MediaScreen({ navigation }) {
                     navigation.goBack();
                 }}
             />
+            <IconButton 
+                style={styles.addButton} 
+                icon="check" 
+                color={Colors.white} 
+                size={45} 
+                onPress={() => {
+                    Alert.alert('placeholder')
+                }}
+            />
             {selected.poster_path ? (
                 <Image 
                     source={{uri: imgUrl + selected.poster_path}} 
-                    style={{ height: "50%", width: "80%", resizeMode: 'contain'}}
+                    style={{ height: "50%", width: "80%", resizeMode: 'contain' }}
                 />
               ) : (
                 
@@ -54,7 +64,7 @@ const styles = StyleSheet.create({
         left: -5
     },
     titleText: {
-        fontSize: 30,
+        fontSize: 80,
         textAlign: 'center',
         justifyContent: 'center'
     },
@@ -64,5 +74,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#C1C1C1',
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    addButton: {
+        position: "absolute",
+        top: 40,
+        right: 5
     }
 });
