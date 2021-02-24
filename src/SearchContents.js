@@ -100,6 +100,7 @@ export default function SearchContents({ navigation }) {
                 onChangeText={e => setQuery(e)}
                 value={query}
                 onSubmitEditing={() => {
+                    // clear search results and fill in new results
                     dispatch({
                         type: "CLEAR_SEARCHES"
                     })

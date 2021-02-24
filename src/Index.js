@@ -38,7 +38,19 @@ export default function Index() {
     if (user) {
       // console.log('${user.uid}');
       db.collection('users').doc(user.uid).onSnapshot((doc) => {
-        console.log(doc.data())
+        const userData = doc.data();
+
+        // set user first name and last name
+        dispatch({
+          type: "SET_NAME",
+          item: [userData.firstName, userData.lastName]
+        });
+        console.log(userData)
+      });
+    } else {
+      dispatch({
+        type: "SET_NAME",
+        item: [null, null]
       });
     }
   }, [user]);

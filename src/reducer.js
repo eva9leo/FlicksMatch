@@ -2,7 +2,11 @@ export const initialState = {
     watched: [],
     user: null,
     searches: [],
-    selected: null
+    selected: null,
+    shows: [],
+    movies: [],
+    firstname: null,
+    lastname: null,
 };
 
 export default function reducer(state, action) {
@@ -31,6 +35,12 @@ export default function reducer(state, action) {
             return {
                 ...state,
                 selected: action.item
+            }
+        case "SET_NAME":
+            return {
+                ...state,
+                firstname: action.item[0],
+                lastname: action.item[1]
             }
         default:
             return state;
