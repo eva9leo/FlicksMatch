@@ -43,7 +43,7 @@ export default function Index() {
           // set user first name and last name
           dispatch({
             type: "SET_NAME",
-            item: [userData.firstName, userData.lastName]
+            item: [userData.firstName? userData.firstName : null, userData.lastName? userData.lastName : null]
           });
           console.log(userData)
         }
