@@ -5,10 +5,11 @@ import { useStateValue } from './StateProvider'
 import { IconButton, Colors } from 'react-native-paper'
 
 export default function Profile({ navigation }) {
-    const [{ user, firstname, lastname }, dispatch] = useStateValue();
+    const [{ user, firstname, lastname, unsubscribe }, dispatch] = useStateValue();
 
     const logout = () => {
         if (user) {
+            unsubscribe();
             auth.signOut()
         }
     }

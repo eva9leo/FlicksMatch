@@ -35,19 +35,30 @@ export default function Index() {
   }, []);
 
   useEffect(() => {
-    if (user) {
+    if (user) { // when user is logged in
       // console.log('${user.uid}');
-      db.collection('users').doc(user.uid).onSnapshot((doc) => {
-        const userData = doc.data();
-
-        // set user first name and last name
-        dispatch({
-          type: "SET_NAME",
-          item: [userData.firstName, userData.lastName]
-        });
-        console.log(userData)
+      const unsubscribe = db.collection('users').doc(user.uid).onSnapshot((doc) => {
+        if (doc) {
+          const userData = doc.data();
+          // set user first name and last name
+          dispatch({
+            type: "SET_NAME",
+            item: [userData.firstName, userData.lastName]
+          });
+          console.log(userData)
+        }
       });
-    } else {
+
+      dispatch({
+        type: "SET_UNSUBSCRIBE",
+        item: unsubscribe
+      });
+    } else { // When user is logged out
+      dispatch({
+        type: "SET_UNSUBSCRIBE",
+        item: null
+      });
+
       dispatch({
         type: "SET_NAME",
         item: [null, null]

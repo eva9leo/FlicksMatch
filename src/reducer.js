@@ -7,6 +7,7 @@ export const initialState = {
     movies: [],
     firstname: null,
     lastname: null,
+    unsubscribe: null,
 };
 
 export default function reducer(state, action) {
@@ -41,6 +42,11 @@ export default function reducer(state, action) {
                 ...state,
                 firstname: action.item[0],
                 lastname: action.item[1]
+            }
+        case "SET_UNSUBSCRIBE":
+            return {
+                ...state,
+                unsubscribe: action.item
             }
         default:
             return state;
