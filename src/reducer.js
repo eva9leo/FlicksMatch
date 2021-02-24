@@ -27,6 +27,22 @@ export default function reducer(state, action) {
                 ...state,
                 searches: [ ...state.searches, ...action.item]
             }
+        case "SET_SHOWS":
+            return {
+                ...state,
+                shows: action.item
+            }
+        case "SET_MOVIES":
+            return {
+                ...state,
+                movies: action.item
+            }
+        case "CLEAR_CONTENT":
+            return {
+                ...state,
+                movies: [],
+                shows: []
+            }
         case "CLEAR_SEARCHES":
             return {
                 ...state,

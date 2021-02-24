@@ -16,7 +16,7 @@ import SearchContents from "./SearchContents"
 export default function Index() {
   const Stack = createStackNavigator();
 
-  const [{ user }, dispatch] = useStateValue();
+  const [{ user, shows, movies }, dispatch] = useStateValue();
   
   useEffect(() => {
     auth.onAuthStateChanged(authUser => {
@@ -30,13 +30,20 @@ export default function Index() {
           type: 'SET_USER',
           user: null
         });
+        dispatch({
+          type: "SET_UNSUBSCRIBE",
+          item: null
+        });
+        dispatch({
+          type: "SET_NAME",
+          item: [null, null]
+        });
       }
     });
   }, []);
 
   useEffect(() => {
     if (user) { // when user is logged in
-      // console.log('${user.uid}');
       const unsubscribe = db.collection('users').doc(user.uid).onSnapshot((doc) => {
         if (doc) {
           const userData = doc.data();
@@ -45,6 +52,14 @@ export default function Index() {
             type: "SET_NAME",
             item: [userData.firstName? userData.firstName : null, userData.lastName? userData.lastName : null]
           });
+          dispatch({
+            type: "SET_MOVIES",
+            item: userData.movies ? userData.movies : []
+          })
+          dispatch({
+            type: "SET_SHOWS",
+            item: userData.shows ? userData.shows : []
+          })
           console.log(userData)
         }
       });
@@ -52,16 +67,6 @@ export default function Index() {
       dispatch({
         type: "SET_UNSUBSCRIBE",
         item: unsubscribe
-      });
-    } else { // When user is logged out
-      dispatch({
-        type: "SET_UNSUBSCRIBE",
-        item: null
-      });
-
-      dispatch({
-        type: "SET_NAME",
-        item: [null, null]
       });
     }
   }, [user]);

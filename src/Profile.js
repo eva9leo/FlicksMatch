@@ -5,7 +5,7 @@ import { useStateValue } from './StateProvider'
 import { IconButton, Colors } from 'react-native-paper'
 
 export default function Profile({ navigation }) {
-    const [{ user, firstname, lastname, unsubscribe }, dispatch] = useStateValue();
+    const [{ user, firstname, lastname, unsubscribe, shows, movies }, dispatch] = useStateValue();
 
     const logout = () => {
         if (user) {
@@ -17,6 +17,8 @@ export default function Profile({ navigation }) {
     return (
         <View style={styles.container}>
             <Text>{"Hello, " + firstname + " " + lastname }</Text>
+            <Text>{"Movies: " + movies}</Text>
+            <Text>{"TV shows: " + shows}</Text>
             <IconButton style={styles.addButton} icon="plus" color={Colors.white} size={45} onPress={() => 
                 {
                     dispatch({

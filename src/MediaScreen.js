@@ -8,7 +8,6 @@ import firebase from 'firebase'
 export default function MediaScreen({ navigation }) {
     const [{ selected, user }, dispatch] = useStateValue();
     const imgUrl = "https://image.tmdb.org/t/p/original";
-    console.log(selected)
     // console.log(selected)
 
     const addMovie = e => {
