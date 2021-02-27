@@ -6,9 +6,8 @@ import { db } from './firebaseConfig';
 import firebase from 'firebase'
 
 export default function MediaScreen({ navigation }) {
-    const [{ selected, user }, dispatch] = useStateValue();
+    const [{ selected, user, insearch }, dispatch] = useStateValue();
     const imgUrl = "https://image.tmdb.org/t/p/original";
-    // console.log(selected)
 
     const addMovie = e => {
         e.preventDefault();
@@ -35,13 +34,16 @@ export default function MediaScreen({ navigation }) {
                     navigation.goBack();
                 }}
             />
-            <IconButton 
-                style={styles.addButton} 
-                icon="check" 
-                color={Colors.white} 
-                size={45} 
-                onPress={selected.type === 'movie' ? addMovie : addTv}
-            />
+            {insearch ? (
+                <IconButton 
+                    style={styles.addButton} 
+                    icon="check" 
+                    color={Colors.white} 
+                    size={45} 
+                    onPress={selected.type === 'movie' ? addMovie : addTv}
+                />
+            ) : (<></>)}
+            
             {selected.poster_path ? (
                 <Image 
                     source={{uri: imgUrl + selected.poster_path}} 

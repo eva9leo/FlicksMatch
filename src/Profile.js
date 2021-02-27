@@ -1,34 +1,68 @@
-import React, { useContext } from 'react'
-import { View, Text, Button, StyleSheet, Alert, TouchableOpacity } from "react-native"
+import React, { useCallback, useContext } from 'react'
+import { View, Text, Button, StyleSheet, Alert, TouchableOpacity, SafeAreaView, FlatList } from "react-native"
 import { auth } from "./firebaseConfig"
 import { useStateValue } from './StateProvider'
 import { IconButton, Colors } from 'react-native-paper'
+import ResultBox from './components/ResultBox'
+import { LinearGradient } from 'expo-linear-gradient'
+import MaskedView from '@react-native-masked-view/masked-view';
 
 export default function Profile({ navigation }) {
     const [{ user, firstname, lastname, unsubscribe, shows, movies }, dispatch] = useStateValue();
 
     const logout = () => {
         if (user) {
-            unsubscribe();
+            // unsubscribe();
+            dispatch({type: 'CLEAR_CONTENT'})
             auth.signOut()
         }
     }
 
+    const keyExtractor = useCallback((item) => item.id.toString(), []);
+    const renderItem = useCallback(
+        ({ item }) => <ResultBox item={item} navigation={ navigation } dispatch={ dispatch } />, []
+    );
+
     return (
         <View style={styles.container}>
-            <Text>{"Hello, " + firstname + " " + lastname }</Text>
-            <Text>{"Movies: " + movies}</Text>
-            <Text>{"TV shows: " + shows}</Text>
+            {/* <Text>{"Hello, " + firstname + " " + lastname }</Text> */}
+            {/* <Text>{"Movies: " + movies}</Text>
+            <Text>{"TV shows: " + shows}</Text> */}
+            <MaskedView 
+                style={styles.maskContainerTop}
+                maskElement={ <LinearGradient style={styles.fadeContainer} colors={['transparent', 'black'] } locations={[0.055, 0.075]} /> }
+            >
+                <MaskedView 
+                style={styles.maskContainerBottom}
+                maskElement={ <LinearGradient style={styles.fadeContainer} colors={['black', 'transparent'] } locations={[0.93, 0.95]} /> }
+                >
+                <SafeAreaView style={styles.resultsContainer}>
+                    <FlatList 
+                        style={{}}
+                        initialNumToRender={9}
+                        numColumns={3}
+                        data={ movies }
+                        keyExtractor={keyExtractor}
+                        renderItem={ renderItem }
+                        style={{ paddingTop: 15}}
+                        showsVerticalScrollIndicator={false}
+                    />
+                </SafeAreaView>
+                </MaskedView>
+            </MaskedView>
             <IconButton style={styles.addButton} icon="plus" color={Colors.white} size={45} onPress={() => 
                 {
                     dispatch({
                         type: "CLEAR_SEARCHES"
-                    })
-                    navigation.navigate("SearchContents")
+                    });
+                    dispatch({
+                        type: "SET_INSEARCH"
+                    });
+                    navigation.navigate("SearchContents");
                 }
                 }/>
             <IconButton style={styles.homeButton} icon="home" color={Colors.white} size={45} onPress={() => navigation.navigate("Home")}/>
-            <View style={styles.profileButtonContainer}>
+            <View style={styles.logoutButtonContainer}>
                 <TouchableOpacity style={styles.buttonContainer} onPress={logout}>
                     <Text style={styles.buttonText}>Log Out</Text>
                 </TouchableOpacity>
@@ -61,9 +95,9 @@ const styles = StyleSheet.create({
         alignSelf: "center",
         textTransform: "uppercase"
     },
-    profileButtonContainer: {
+    logoutButtonContainer: {
         position: "absolute",
-        bottom: 40,
+        bottom: 20,
         width: "80%",
     },
     addButton: {
@@ -75,5 +109,37 @@ const styles = StyleSheet.create({
         position: "absolute",
         top: 40,
         left: 5
-    }
+    },
+    resultsContainer: {
+        marginTop: 25,
+        flex: 1, 
+        width: "100%",
+        alignItems: 'center'
+    },
+    resultContainer: {
+        height: '100%', 
+        width: '100%', 
+        flex: 1
+    },
+    touchContainer: {
+        width: '30%',
+        height: '40%'
+    },
+    maskContainerTop: {
+        marginTop: 100,
+        flex: 1, 
+        width: "100%",
+        alignItems: 'center'
+    },
+    fadeContainer: {
+        flex: 1, 
+        width: "100%",
+        alignItems: 'center'
+    },
+    maskContainerBottom: {
+        flex: 1, 
+        width: "100%",
+        alignItems: 'center',
+        marginBottom: 50
+    },
 });

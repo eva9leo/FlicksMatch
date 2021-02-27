@@ -11,12 +11,37 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useStateValue } from './StateProvider';
 import { auth, db } from './firebaseConfig';
+import { TMDB_KEY } from "@env"
 import SearchContents from "./SearchContents"
 
 export default function Index() {
   const Stack = createStackNavigator();
 
   const [{ user, shows, movies }, dispatch] = useStateValue();
+
+  const searchMovieById = async (movieId) => {
+    fetch(
+      "https://api.themoviedb.org/3/movie/" +
+      movieId + "?api_key=" +
+      TMDB_KEY +
+      "&language=en-US"
+    ).then((response) => response.json())
+    .then((item) => {
+      // console.log(json)
+      dispatch({
+        type: "ADD_MOVIE",
+        item: {
+          id: item.id,
+          name: item.name,
+          title: item.title,
+          poster_path: item.poster_path,
+          overview: item.overview,
+          vote_average: item.vote_average,
+          type: 'tv'
+        }
+      });
+    })
+  }
   
   useEffect(() => {
     auth.onAuthStateChanged(authUser => {
@@ -44,30 +69,42 @@ export default function Index() {
 
   useEffect(() => {
     if (user) { // when user is logged in
-      const unsubscribe = db.collection('users').doc(user.uid).onSnapshot((doc) => {
+      db.collection('users').doc(user.uid).get().then((doc) => {
         if (doc) {
           const userData = doc.data();
-          // set user first name and last name
-          dispatch({
-            type: "SET_NAME",
-            item: [userData.firstName? userData.firstName : null, userData.lastName? userData.lastName : null]
-          });
-          dispatch({
-            type: "SET_MOVIES",
-            item: userData.movies ? userData.movies : []
+          userData.movies.forEach(function(movie) {
+            // console.log(movie)
+            searchMovieById(movie)
           })
-          dispatch({
-            type: "SET_SHOWS",
-            item: userData.shows ? userData.shows : []
-          })
-          console.log(userData)
+          // console.log(doc.data());
         }
-      });
+      }).catch((error) => {
+        console.log("Error getting document", error)
+      })
+      // const unsubscribe = db.collection('users').doc(user.uid).onSnapshot((doc) => {
+      //   if (doc) {
+      //     const userData = doc.data();
+      //     // set user first name and last name
+      //     dispatch({
+      //       type: "SET_NAME",
+      //       item: [userData.firstName? userData.firstName : null, userData.lastName? userData.lastName : null]
+      //     });
+      //     dispatch({
+      //       type: "SET_MOVIES",
+      //       item: userData.movies ? userData.movies : []
+      //     })
+      //     dispatch({
+      //       type: "SET_SHOWS",
+      //       item: userData.shows ? userData.shows : []
+      //     })
+      //     console.log(userData)
+      //   }
+      // });
 
-      dispatch({
-        type: "SET_UNSUBSCRIBE",
-        item: unsubscribe
-      });
+      // dispatch({
+      //   type: "SET_UNSUBSCRIBE",
+      //   item: unsubscribe
+      // });
     }
   }, [user]);
 

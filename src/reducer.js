@@ -8,10 +8,16 @@ export const initialState = {
     firstname: null,
     lastname: null,
     unsubscribe: null,
+    insearch: false,
 };
 
 export default function reducer(state, action) {
     switch(action.type) {
+        case 'SET_INSEARCH': 
+            return {
+                ...state,
+                insearch: !state.insearch
+            }
         case 'ADD_TO_LIKES':
             return {
                 ...state,
@@ -32,10 +38,20 @@ export default function reducer(state, action) {
                 ...state,
                 shows: action.item
             }
-        case "SET_MOVIES":
+        case "SET_MOVIE":
             return {
                 ...state,
                 movies: action.item
+            }
+        case "ADD_SHOW":
+            return {
+                ...state,
+                shows: [ ...state.shows, action.item]
+            }
+        case "ADD_MOVIE":
+            return {
+                ...state,
+                movies: [ ...state.movies, action.item]
             }
         case "CLEAR_CONTENT":
             return {

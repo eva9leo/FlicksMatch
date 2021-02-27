@@ -88,6 +88,9 @@ export default function SearchContents({ navigation }) {
                 color={Colors.white} 
                 size={45} 
                 onPress={() => {
+                    dispatch({
+                        type: "SET_INSEARCH"
+                    });
                     navigation.goBack();
                 }}
             />
