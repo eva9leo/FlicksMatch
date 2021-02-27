@@ -41,7 +41,7 @@ export default function Profile({ navigation }) {
                         style={{}}
                         initialNumToRender={9}
                         numColumns={3}
-                        data={ movies }
+                        data={ [...movies, ...shows] }
                         keyExtractor={keyExtractor}
                         renderItem={ renderItem }
                         style={{ paddingTop: 15}}

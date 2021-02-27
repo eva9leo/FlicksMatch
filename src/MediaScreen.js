@@ -6,21 +6,44 @@ import { db } from './firebaseConfig';
 import firebase from 'firebase'
 
 export default function MediaScreen({ navigation }) {
-    const [{ selected, user, insearch }, dispatch] = useStateValue();
+    const [{ selected, user, insearch, movies, shows }, dispatch] = useStateValue();
     const imgUrl = "https://image.tmdb.org/t/p/original";
 
     const addMovie = e => {
-        e.preventDefault();
-        db.collection('users').doc(user.uid).update({
-            movies: firebase.firestore.FieldValue.arrayUnion(selected.id.toString())
-        }).catch(error => Alert.alert(error.message))
+        if (movies.some(item => item.id === selected.id)) {
+            Alert.alert('This is already in your watched list');
+        } else {
+            e.preventDefault();
+            db.collection('users').doc(user.uid).update({
+                movies: firebase.firestore.FieldValue.arrayUnion(selected.id.toString())
+            }).then(() => {
+                dispatch({
+                    type: 'ADD_MOVIE',
+                    item: selected
+                });
+                navigation.goBack();
+            }
+            ).catch(error => Alert.alert(error.message))
+        }
+        
     }
 
     const addTv = e => {
-        e.preventDefault();
-        db.collection('users').doc(user.uid).update({
-            shows: firebase.firestore.FieldValue.arrayUnion(selected.id.toString())
-        }).catch(error => Alert.alert(error.message))
+        if (shows.some(item => item.id === selected.id)) {
+            Alert.alert('This is already in your watched list');
+        } else {
+            e.preventDefault();
+            db.collection('users').doc(user.uid).update({
+                shows: firebase.firestore.FieldValue.arrayUnion(selected.id.toString())
+            }).then(() => {
+                dispatch({
+                    type: 'ADD_SHOW',
+                    item: selected
+                });
+                navigation.goBack();
+            }).catch(error => Alert.alert(error.message))
+        }
+        
     }
 
     return (

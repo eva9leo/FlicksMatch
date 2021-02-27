@@ -27,9 +27,31 @@ export default function Index() {
       "&language=en-US"
     ).then((response) => response.json())
     .then((item) => {
-      // console.log(json)
       dispatch({
         type: "ADD_MOVIE",
+        item: {
+          id: item.id,
+          name: item.name,
+          title: item.title,
+          poster_path: item.poster_path,
+          overview: item.overview,
+          vote_average: item.vote_average,
+          type: 'movie'
+        }
+      });
+    })
+  }
+
+  const searchShowById = async (showId) => {
+    fetch(
+      "https://api.themoviedb.org/3/tv/" +
+      showId + "?api_key=" +
+      TMDB_KEY +
+      "&language=en-US"
+    ).then((response) => response.json())
+    .then((item) => {
+      dispatch({
+        type: "ADD_SHOW",
         item: {
           id: item.id,
           name: item.name,
@@ -73,8 +95,10 @@ export default function Index() {
         if (doc) {
           const userData = doc.data();
           userData.movies.forEach(function(movie) {
-            // console.log(movie)
             searchMovieById(movie)
+          })
+          userData.shows.forEach(function(show) {
+            searchShowById(show)
           })
           // console.log(doc.data());
         }
