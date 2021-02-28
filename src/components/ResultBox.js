@@ -21,7 +21,7 @@ class ResultBox extends PureComponent {
               {this.props.item.poster_path ? (
                 <Image 
                     source={{uri: imgUrl + this.props.item.poster_path}} 
-                    style={{ height: 250, width: "100%", resizeMode: "contain"}}
+                    style={{ height: 180, width: "100%", resizeMode: "contain"}}
                 />
               ) : (
                 
@@ -49,28 +49,8 @@ const styles = StyleSheet.create({
       justifyContent: "center",
       alignItems: "center"
   },
-  backButton: {
-      position: "absolute",
-      top: 40,
-      left: -5
-  },
-  searchBarContainer: {
-      position: "absolute",
-      top: 45,
-      left: 60,
-      width: "83%",
-      backgroundColor: "#f2784b",
-      borderBottomColor: "transparent",
-      borderTopColor: "transparent"
-  },
-  resultsContainer: {
-      marginTop: 130,
-      flex: 1, 
-      width: "100%",
-      alignItems: 'center'
-  },
   resultContainer: {
-      height: 200, 
+      height: 185, 
       width: 120, 
       flex: 1,
       justifyContent: 'center'
@@ -82,7 +62,7 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
       width: '100%',
-      height: '90%',
+      height: '95%',
       backgroundColor: '#C1C1C1',
       justifyContent: 'center',
       alignItems: 'center'
