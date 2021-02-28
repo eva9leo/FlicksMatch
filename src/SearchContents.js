@@ -127,7 +127,7 @@ export default function SearchContents({ navigation }) {
                         data={ searches }
                         keyExtractor={keyExtractor}
                         renderItem={ renderItem }
-                        style={{ paddingTop: 15}}
+                        style={{ paddingTop: 15, width: '100%' }}
                         showsVerticalScrollIndicator={false}
                         
                     />
