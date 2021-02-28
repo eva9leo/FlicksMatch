@@ -53,6 +53,16 @@ export default function reducer(state, action) {
                 ...state,
                 movies: [ ...state.movies, action.item]
             }
+        case "REMOVE_SHOW":
+            return {
+                ...state,
+                shows: state.shows.filter(item => item.id !== action.id)
+            }
+        case "REMOVE_MOVIE":
+            return {
+                ...state,
+                movies: state.movies.filter(item => item.id !== action.id)
+            }
         case "CLEAR_CONTENT":
             return {
                 ...state,

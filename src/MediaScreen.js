@@ -25,7 +25,6 @@ export default function MediaScreen({ navigation }) {
             }
             ).catch(error => Alert.alert(error.message))
         }
-        
     }
 
     const addTv = e => {
@@ -43,7 +42,35 @@ export default function MediaScreen({ navigation }) {
                 navigation.goBack();
             }).catch(error => Alert.alert(error.message))
         }
-        
+    }
+
+    const removeTv = e => {
+        e.preventDefault();
+        db.collection('users').doc(user.uid).update({
+            shows: firebase.firestore.FieldValue.arrayRemove(selected.id.toString())
+        }).then(() => {
+            dispatch({
+                type: "REMOVE_SHOW",
+                id: selected.id
+            })
+        }).then(() => {
+            navigation.goBack();
+        }).catch(error => Alert.alert(error.message))
+    }
+
+    const removeMovie = e => {
+        e.preventDefault();
+        db.collection('users').doc(user.uid).update({
+            movies: firebase.firestore.FieldValue.arrayRemove(selected.id.toString())
+        }).then(() => {
+            dispatch({
+                type: "REMOVE_MOVIE",
+                id: selected.id
+            })
+        }).then(() => {
+            // console.log(movies)
+            navigation.goBack();
+        }).catch(error => Alert.alert(error.message))
     }
 
     return (
@@ -65,7 +92,15 @@ export default function MediaScreen({ navigation }) {
                     size={45} 
                     onPress={selected.type === 'movie' ? addMovie : addTv}
                 />
-            ) : (<></>)}
+            ) : (
+                <IconButton 
+                    style={styles.addButton} 
+                    icon="delete" 
+                    color={Colors.white} 
+                    size={45} 
+                    onPress={selected.type === 'movie' ? removeMovie : removeTv}
+                />
+            )}
             
             {selected.poster_path ? (
                 <Image 

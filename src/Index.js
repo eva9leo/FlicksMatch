@@ -100,7 +100,7 @@ export default function Index() {
           userData.shows.forEach(function(show) {
             searchShowById(show)
           })
-          // console.log(doc.data());
+          console.log(doc.data());
         }
       }).catch((error) => {
         console.log("Error getting document", error)
