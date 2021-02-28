@@ -15,9 +15,6 @@ export default function RegisterForm() {
         auth.createUserWithEmailAndPassword(email, password)
             .then((result) => {
                 if (result) {
-                    // result.user.updateProfile({
-                    //     displayName: firstName + " " + lastName
-                    // })
                     db.collection('users').doc(result.user.uid).set({
                         firstName: firstName,
                         lastName: lastName,

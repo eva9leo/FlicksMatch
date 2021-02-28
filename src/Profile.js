@@ -44,7 +44,7 @@ export default function Profile({ navigation }) {
                         data={ [...movies, ...shows] }
                         keyExtractor={keyExtractor}
                         renderItem={ renderItem }
-                        style={{ paddingTop: 15}}
+                        style={{ paddingTop: 15, width: '100%' }}
                         showsVerticalScrollIndicator={false}
                     />
                 </SafeAreaView>
