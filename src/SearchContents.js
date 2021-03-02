@@ -73,9 +73,6 @@ export default function SearchContents({ navigation }) {
     }
 
     const keyExtractor = useCallback((item) => item.id.toString(), []);
-    // const renderItem = useCallback(
-    //     ({ item }) => <ResultBox item={item} navigation={ navigation } dispatch={ dispatch }/>, []
-    // );
     const renderItem = useCallback(
         ({ item, index }) => 
         <TransitionView index={ index }>
