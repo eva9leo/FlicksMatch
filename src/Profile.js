@@ -33,6 +33,7 @@ export default function Profile({ navigation }) {
             {/* <Text>{"Hello, " + firstname + " " + lastname }</Text> */}
             {/* <Text>{"Movies: " + movies}</Text>
             <Text>{"TV shows: " + shows}</Text> */}
+            <Text style={styles.titleText}>{"Watched List"}</Text>
             <MaskedView 
                 style={styles.maskContainerTop}
                 maskElement={ <LinearGradient style={styles.fadeContainer} colors={['transparent', 'black'] } locations={[0.055, 0.075]} /> }
@@ -109,6 +110,12 @@ const styles = StyleSheet.create({
         position: "absolute",
         top: 40,
         right: 5
+    },
+    titleText: {
+        position: "absolute",
+        top: 68,
+        color: 'white',
+        fontSize: 25
     },
     homeButton: {
         position: "absolute",
