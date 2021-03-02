@@ -21,7 +21,10 @@ class TransitionView extends PureComponent {
 
     render() {
         return (
-            <Animated.View style={{ opacity: this.state.scaleValue }}>
+            <Animated.View 
+            style={ this.props.width ? 
+            { opacity: this.state.scaleValue, width: this.props.width + '%', flexGrow: 1 } : 
+            { opacity: this.state.scaleValue }}>
                 { this.props.children }
             </Animated.View>
         )
