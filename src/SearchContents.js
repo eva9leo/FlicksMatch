@@ -7,6 +7,7 @@ import ResultBox from './components/ResultBox'
 import { useStateValue } from './StateProvider';
 import { LinearGradient } from 'expo-linear-gradient'
 import MaskedView from '@react-native-masked-view/masked-view';
+import TransitionView from './components/TransitionView';
 
 export default function SearchContents({ navigation }) {
     const [{ searches }, dispatch] = useStateValue();
@@ -71,13 +72,16 @@ export default function SearchContents({ navigation }) {
         })
     }
 
-    const selectHandler = () => {
-        alert("Hello")
-    }
-
     const keyExtractor = useCallback((item) => item.id.toString(), []);
+    // const renderItem = useCallback(
+    //     ({ item }) => <ResultBox item={item} navigation={ navigation } dispatch={ dispatch }/>, []
+    // );
     const renderItem = useCallback(
-        ({ item }) => <ResultBox item={item} navigation={ navigation } dispatch={ dispatch }/>, []
+        ({ item, index }) => 
+        <TransitionView index={ index }>
+            <ResultBox item={item} navigation={ navigation } dispatch={ dispatch } />
+        </TransitionView>
+        , []
     );
 
     return (

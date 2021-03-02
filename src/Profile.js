@@ -6,6 +6,7 @@ import { IconButton, Colors } from 'react-native-paper'
 import ResultBox from './components/ResultBox'
 import { LinearGradient } from 'expo-linear-gradient'
 import MaskedView from '@react-native-masked-view/masked-view';
+import TransitionView from './components/TransitionView';
 
 export default function Profile({ navigation }) {
     const [{ user, firstname, lastname, unsubscribe, shows, movies }, dispatch] = useStateValue();
@@ -20,7 +21,11 @@ export default function Profile({ navigation }) {
 
     const keyExtractor = useCallback((item) => item.id.toString(), []);
     const renderItem = useCallback(
-        ({ item }) => <ResultBox item={item} navigation={ navigation } dispatch={ dispatch } />, []
+        ({ item, index }) => 
+        <TransitionView index={ index }>
+            <ResultBox item={item} navigation={ navigation } dispatch={ dispatch } />
+        </TransitionView>
+        , []
     );
 
     return (
