@@ -3,7 +3,8 @@ import { StyleSheet, Text, View, Image, TouchableOpacity, Alert } from 'react-na
 import { IconButton, Colors } from 'react-native-paper'
 import { useStateValue } from './StateProvider';
 import { db } from './firebaseConfig';
-import firebase from 'firebase'
+import firebase from 'firebase';
+import MediaDetail from './components/MediaDetail'
 
 export default function MediaScreen({ navigation }) {
     const [{ selected, user, insearch, movies, shows }, dispatch] = useStateValue();
@@ -101,8 +102,8 @@ export default function MediaScreen({ navigation }) {
                     onPress={selected.type === 'movie' ? removeMovie : removeTv}
                 />
             )}
-            
-            {selected.poster_path ? (
+            <MediaDetail selected={ selected }/>
+            {/* {selected.poster_path ? (
                 <Image 
                     source={{uri: imgUrl + selected.poster_path}} 
                     style={{ height: "50%", width: "80%", resizeMode: 'contain' }}
@@ -118,7 +119,7 @@ export default function MediaScreen({ navigation }) {
                     </Text>
                 </View>
               )}
-            <Text>{selected.title ? selected.title : selected.name}</Text>
+            <Text>{selected.title ? selected.title : selected.name}</Text> */}
         </View>
     )
 }
