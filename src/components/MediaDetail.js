@@ -7,6 +7,15 @@ import TransitionView from './TransitionView';
 const imgUrl = "https://image.tmdb.org/t/p/original";
 
 class MediaDetail extends Component {
+    state = {
+        scrollHeight: 0,
+        contentHeight: 0,
+    }
+
+    onContentHeightChange = (ContentWidth, ContentHeight) => {
+        this.setState({ contentHeight: ContentHeight })
+    }
+
     render() {
         return (
             <SafeAreaView style={styles.detailContainer}>
@@ -25,15 +34,12 @@ class MediaDetail extends Component {
                         showsVerticalScrollIndicator={false}
                         onLayout={(event) => {
                             var {x, y, width, height} = event.nativeEvent.layout;
-                            console.log("Scrollview height: " + height)
+                            this.setState({ scrollHeight: height })
                         }}
+                        onContentSizeChange={this.onContentHeightChange}
+                        scrollEnabled = { this.state.contentHeight > this.state.scrollHeight }
                         >
-                            <View style={{ flexGrow: 1, width: '100%', alignItems: 'center' }}
-                            onLayout={(event) => {
-                                var {x, y, width, height} = event.nativeEvent.layout;
-                                console.log("Content height: " + height)
-                            }}
-                            >
+                            <View style={{ flexGrow: 1, width: '100%', alignItems: 'center' }}>
                             {this.props.selected.poster_path ? (
                             <Image 
                                 source={{uri: imgUrl + this.props.selected.poster_path}} 
