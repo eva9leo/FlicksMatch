@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { ScrollView, SafeAreaView, View, Image, StyleSheet, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient'
 import MaskedView from '@react-native-masked-view/masked-view';
+import TransitionView from './TransitionView';
 
 const imgUrl = "https://image.tmdb.org/t/p/original";
 
@@ -14,10 +15,11 @@ class MediaDetail extends Component {
                 style={styles.maskContainerTop}
                 maskElement={ <LinearGradient style={styles.fadeContainer} colors={['transparent', 'black'] } locations={[0.055, 0.075]} /> }
                 >
-                <MaskedView 
-                style={styles.maskContainerBottom}
-                maskElement={ <LinearGradient style={styles.fadeContainer} colors={['black', 'transparent'] } locations={[0.93, 0.95]} /> }
-                >
+                    <MaskedView 
+                    style={styles.maskContainerBottom}
+                    maskElement={ <LinearGradient style={styles.fadeContainer} colors={['black', 'transparent'] } locations={[0.93, 0.95]} /> }
+                    >
+                    <TransitionView>
                         <ScrollView 
                         style={styles.detailsContainer} 
                         contentContainerStyle={styles.contentContainerStyle}
@@ -47,6 +49,7 @@ class MediaDetail extends Component {
                                 </Text>
                             </View>
                         </ScrollView>
+                        </TransitionView>
                     </MaskedView>
                 </MaskedView>
             </SafeAreaView>
