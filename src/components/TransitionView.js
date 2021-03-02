@@ -14,7 +14,7 @@ class TransitionView extends PureComponent {
         Animated.timing(this.state.scaleValue, {
             toValue: 1,
             duration : 600,
-            delay: this.props.index * 50,
+            delay: this.props.index ? (this.props.index * 50) : 0,
             useNativeDriver: true
         }).start();
     }
