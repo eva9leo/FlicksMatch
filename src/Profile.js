@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from 'react'
+import React, { useCallback, useState } from 'react'
 import { View, Text, Button, StyleSheet, Alert, TouchableOpacity, SafeAreaView, FlatList } from "react-native"
 import { auth } from "./firebaseConfig"
 import { useStateValue } from './StateProvider'
@@ -10,6 +10,13 @@ import TransitionView from './components/TransitionView';
 
 export default function Profile({ navigation }) {
     const [{ user, firstname, lastname, unsubscribe, shows, movies }, dispatch] = useStateValue();
+
+    const [scrollHeight, setScrollHeight] = useState(0);
+    const [contentHeight, setContentHeight] = useState(0);
+
+    const onContentHeightChange = (ContentWidth, ContentHeight) => {
+        setContentHeight(ContentHeight)
+    }
 
     const logout = () => {
         if (user) {
@@ -52,6 +59,12 @@ export default function Profile({ navigation }) {
                         renderItem={ renderItem }
                         style={{ paddingTop: 15, width: '100%' }}
                         showsVerticalScrollIndicator={false}
+                        onLayout={(event) => {
+                            var {x, y, width, height} = event.nativeEvent.layout;
+                            setScrollHeight(height)
+                        }}
+                        onContentSizeChange={onContentHeightChange}
+                        scrollEnabled = { contentHeight > scrollHeight }
                     />
                 </SafeAreaView>
                 </MaskedView>
