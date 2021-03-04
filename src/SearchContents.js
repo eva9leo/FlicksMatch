@@ -128,7 +128,8 @@ export default function SearchContents({ navigation }) {
                         data={ searches }
                         keyExtractor={keyExtractor}
                         renderItem={ renderItem }
-                        style={{ paddingTop: 15, width: '100%' }}
+                        style={{ paddingTop: 23, width: '100%' }}
+                        contentContainerStyle={{ paddingBottom: 50 }}
                         showsVerticalScrollIndicator={false}
                         
                     />
@@ -178,7 +179,7 @@ const styles = StyleSheet.create({
         height: '40%'
     },
     maskContainerTop: {
-        marginTop: 100,
+        marginTop: 92,
         flex: 1, 
         width: "100%",
         alignItems: 'center'
