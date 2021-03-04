@@ -101,9 +101,13 @@ const styles = StyleSheet.create({
     titleContainer: {
         width: '100%',
         height: 400,
+        width: 250,
         backgroundColor: '#C1C1C1',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        shadowOffset: { width: 5, height: 5 }, 
+        shadowOpacity: 0.5, 
+        overflow: 'visible'
     },
     titleText: {
         fontSize: 80,
