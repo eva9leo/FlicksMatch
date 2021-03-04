@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ScrollView, SafeAreaView, View, Image, StyleSheet, Text, Dimensions } from 'react-native';
+import { ScrollView, SafeAreaView, View, Image, StyleSheet, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient'
 import MaskedView from '@react-native-masked-view/masked-view';
 import TransitionView from './TransitionView';
