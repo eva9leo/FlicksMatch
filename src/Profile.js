@@ -57,7 +57,8 @@ export default function Profile({ navigation }) {
                         data={ [...movies, ...shows] }
                         keyExtractor={keyExtractor}
                         renderItem={ renderItem }
-                        style={{ paddingTop: 15, width: '100%' }}
+                        style={{ paddingTop: 10, width: '100%' }}
+                        contentContainerStyle={styles.contentContainerStyle}
                         showsVerticalScrollIndicator={false}
                         onLayout={(event) => {
                             var {x, y, width, height} = event.nativeEvent.layout;
@@ -151,7 +152,7 @@ const styles = StyleSheet.create({
         height: '40%'
     },
     maskContainerTop: {
-        marginTop: 100,
+        marginTop: 90,
         flex: 1, 
         width: "100%",
         alignItems: 'center'
@@ -166,5 +167,10 @@ const styles = StyleSheet.create({
         width: "100%",
         alignItems: 'center',
         marginBottom: 50
+    },
+    contentContainerStyle: {
+        width: '100%',
+        paddingTop: 15,
+        paddingBottom: 50
     },
 });
