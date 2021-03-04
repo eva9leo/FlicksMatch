@@ -11,12 +11,12 @@ import TransitionView from './components/TransitionView';
 export default function Profile({ navigation }) {
     const [{ user, firstname, lastname, unsubscribe, shows, movies }, dispatch] = useStateValue();
 
-    const [scrollHeight, setScrollHeight] = useState(0);
-    const [contentHeight, setContentHeight] = useState(0);
+    // const [scrollHeight, setScrollHeight] = useState(0);
+    // const [contentHeight, setContentHeight] = useState(0);
 
-    const onContentHeightChange = (ContentWidth, ContentHeight) => {
-        setContentHeight(ContentHeight)
-    }
+    // const onContentHeightChange = (ContentWidth, ContentHeight) => {
+    //     setContentHeight(ContentHeight)
+    // }
 
     const logout = () => {
         if (user) {
@@ -60,12 +60,12 @@ export default function Profile({ navigation }) {
                         style={{ paddingTop: 10, width: '100%' }}
                         contentContainerStyle={styles.contentContainerStyle}
                         showsVerticalScrollIndicator={false}
-                        onLayout={(event) => {
-                            var {x, y, width, height} = event.nativeEvent.layout;
-                            setScrollHeight(height)
-                        }}
-                        onContentSizeChange={onContentHeightChange}
-                        scrollEnabled = { contentHeight > scrollHeight }
+                        // onLayout={(event) => {
+                        //     var {x, y, width, height} = event.nativeEvent.layout;
+                        //     setScrollHeight(height)
+                        // }}
+                        // onContentSizeChange={onContentHeightChange}
+                        // scrollEnabled = { contentHeight > scrollHeight }
                     />
                 </SafeAreaView>
                 </MaskedView>
