@@ -103,23 +103,6 @@ export default function MediaScreen({ navigation }) {
                 />
             )}
             <MediaDetail selected={ selected }/>
-            {/* {selected.poster_path ? (
-                <Image 
-                    source={{uri: imgUrl + selected.poster_path}} 
-                    style={{ height: "50%", width: "80%", resizeMode: 'contain' }}
-                />
-              ) : (
-                
-                <View style={styles.titleContainer}>
-                    <Text 
-                    adjustsFontSizeToFit
-                    numberOfLines={4}
-                    style={styles.titleText}>
-                        {selected.title ? selected.title : selected.name}
-                    </Text>
-                </View>
-              )}
-            <Text>{selected.title ? selected.title : selected.name}</Text> */}
         </View>
     )
 }
