@@ -8,6 +8,7 @@ import { useStateValue } from './StateProvider';
 import { LinearGradient } from 'expo-linear-gradient'
 import MaskedView from '@react-native-masked-view/masked-view';
 import TransitionView from './components/TransitionView';
+import { CompareDates } from './helpers';
 
 export default function SearchContents({ navigation }) {
     const [{ searches }, dispatch] = useStateValue();
@@ -127,7 +128,7 @@ export default function SearchContents({ navigation }) {
                         style={{}}
                         initialNumToRender={9}
                         numColumns={3}
-                        data={ searches }
+                        data={ searches.sort(CompareDates) }
                         keyExtractor={keyExtractor}
                         renderItem={ renderItem }
                         style={{ paddingTop: 23, width: '100%' }}
