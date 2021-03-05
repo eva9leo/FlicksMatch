@@ -86,37 +86,6 @@ export default function SearchContents({ navigation }) {
 
     return (
         <View style={styles.container}>
-            <IconButton 
-                style={styles.backButton} 
-                icon="chevron-left" 
-                color={Colors.white} 
-                size={35} 
-                onPress={() => {
-                    dispatch({
-                        type: "SET_INSEARCH"
-                    });
-                    navigation.goBack();
-                }}
-            />
-            <SearchBar 
-                containerStyle={styles.searchBarContainer} 
-                inputContainerStyle={{ height: '100%', borderRadius: 20 }}
-                platform="ios" 
-                cancelButtonTitle="Cancel" 
-                cancelButtonProps={{color:"#fff"}}
-                placeholder="Search movies and shows"
-                onChangeText={e => setQuery(e)}
-                value={query}
-                // round={true}
-                onSubmitEditing={() => {
-                    // clear search results and fill in new results
-                    dispatch({
-                        type: "CLEAR_SEARCHES"
-                    })
-                    searchMovies();
-                    searchTv();
-                }}
-            />
             <MaskedView 
                 style={styles.maskContainerTop}
                 maskElement={ <LinearGradient style={styles.fadeContainer} colors={['transparent', 'black'] } locations={[0.055, 0.075]} /> }
@@ -141,6 +110,47 @@ export default function SearchContents({ navigation }) {
                 </SafeAreaView>
                 </MaskedView>
             </MaskedView>
+            <IconButton 
+                style={styles.backButton} 
+                icon="chevron-left" 
+                color={Colors.white} 
+                size={35} 
+                onPress={() => {
+                    dispatch({
+                        type: "SET_INSEARCH"
+                    });
+                    navigation.goBack();
+                }}
+            />
+            <IconButton 
+                style={styles.filterButton} 
+                icon="tune" 
+                color={Colors.white} 
+                size={27} 
+                onPress={() => {
+                    Alert.alert('Filter place holder')
+                }}
+            />
+            <SearchBar 
+                containerStyle={styles.searchBarContainer} 
+                inputContainerStyle={{ height: '100%', borderRadius: 20 }}
+                platform="ios" 
+                cancelButtonTitle="Cancel" 
+                cancelButtonProps={{color:"#fff"}}
+                placeholder="Search movies and shows"
+                onChangeText={e => setQuery(e)}
+                value={query}
+                // round={true}
+                onSubmitEditing={() => {
+                    // clear search results and fill in new results
+                    dispatch({
+                        type: "CLEAR_SEARCHES"
+                    })
+                    searchMovies();
+                    searchTv();
+                }}
+            />
+            
         </View>
     )
 }
@@ -157,14 +167,19 @@ const styles = StyleSheet.create({
     backButton: {
         position: "absolute",
         top: 40,
-        left: 0
+        left: -2
+    },
+    filterButton: {
+        position: "absolute",
+        top: 46,
+        right: 0
     },
     searchBarContainer: {
         position: "absolute",
         top: 54,
         left: 50,
         height: 35,
-        width: "80%",
+        width: "74%",
         backgroundColor: "transparent",
         borderBottomColor: "transparent",
         borderTopColor: "transparent"
@@ -185,7 +200,7 @@ const styles = StyleSheet.create({
         height: '40%'
     },
     maskContainerTop: {
-        marginTop: 77,
+        marginTop: 68,
         flex: 1, 
         width: "100%",
         alignItems: 'center'

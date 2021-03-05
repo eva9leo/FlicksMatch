@@ -41,7 +41,6 @@ export default function Profile({ navigation }) {
             {/* <Text>{"Hello, " + firstname + " " + lastname }</Text> */}
             {/* <Text>{"Movies: " + movies}</Text>
             <Text>{"TV shows: " + shows}</Text> */}
-            <Text style={styles.titleText}>{"Watched List"}</Text>
             <MaskedView 
                 style={styles.maskContainerTop}
                 maskElement={ <LinearGradient style={styles.fadeContainer} colors={['transparent', 'black'] } locations={[0.055, 0.075]} /> }
@@ -71,6 +70,30 @@ export default function Profile({ navigation }) {
                 </SafeAreaView>
                 </MaskedView>
             </MaskedView>
+            <View style={{
+                flex: 0,
+                flexDirection: 'row',
+                width: '70%', 
+                justifyContent: 'center',
+                alignItems: 'center',
+                alignContent: 'center',
+                position: 'absolute',
+                top: 60, 
+                height: 20}}
+            >
+                <Text style={styles.titleText}>{"Watched List"}</Text>
+                <IconButton
+                    style={{ paddingTop: 5 }}
+                    icon="tune" 
+                    color={Colors.white} 
+                    size={27} 
+                    onPress={() => {
+                        Alert.alert('Filter place holder')
+                    }}
+                />
+            </View>
+            
+            
             <IconButton style={styles.addButton} icon="plus" color={Colors.white} size={35} onPress={() => 
                 {
                     dispatch({
@@ -127,8 +150,6 @@ const styles = StyleSheet.create({
         right: 5
     },
     titleText: {
-        position: "absolute",
-        top: 60,
         color: 'white',
         fontSize: 25
     },
@@ -153,7 +174,7 @@ const styles = StyleSheet.create({
         height: '40%'
     },
     maskContainerTop: {
-        marginTop: 70,
+        marginTop: 60,
         flex: 1, 
         width: "100%",
         alignItems: 'center'
