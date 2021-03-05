@@ -7,6 +7,7 @@ import ResultBox from './components/ResultBox'
 import { LinearGradient } from 'expo-linear-gradient'
 import MaskedView from '@react-native-masked-view/masked-view';
 import TransitionView from './components/TransitionView';
+import { CompareDates } from './helpers';
 
 export default function Profile({ navigation }) {
     const [{ user, firstname, lastname, unsubscribe, shows, movies }, dispatch] = useStateValue();
@@ -54,7 +55,7 @@ export default function Profile({ navigation }) {
                         style={{}}
                         initialNumToRender={9}
                         numColumns={3}
-                        data={ [...movies, ...shows] }
+                        data={ [...movies, ...shows].sort(CompareDates) }
                         keyExtractor={keyExtractor}
                         renderItem={ renderItem }
                         style={{ paddingTop: 10, width: '100%' }}

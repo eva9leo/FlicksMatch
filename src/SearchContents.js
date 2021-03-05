@@ -34,6 +34,7 @@ export default function SearchContents({ navigation }) {
                         poster_path: item.poster_path,
                         overview: item.overview,
                         vote_average: item.vote_average,
+                        release_date: item.release_date,
                         type: 'movie'
                     }
                 })
@@ -62,6 +63,7 @@ export default function SearchContents({ navigation }) {
                         poster_path: item.poster_path,
                         overview: item.overview,
                         vote_average: item.vote_average,
+                        release_date: item.first_air_date,
                         type: 'tv'
                     }
                 })
