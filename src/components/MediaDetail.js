@@ -18,7 +18,6 @@ class MediaDetail extends Component {
     }
 
     render() {
-        // console.log(this.props.selected)
         return (
             <SafeAreaView style={styles.detailContainer}>
                 <MaskedView 
