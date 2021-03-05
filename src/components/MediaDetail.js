@@ -3,6 +3,7 @@ import { ScrollView, SafeAreaView, View, Image, StyleSheet, Text } from 'react-n
 import { LinearGradient } from 'expo-linear-gradient'
 import MaskedView from '@react-native-masked-view/masked-view';
 import TransitionView from './TransitionView';
+import { AnimatedCircularProgress } from 'react-native-circular-progress';
 
 const imgUrl = "https://image.tmdb.org/t/p/original";
 
@@ -17,6 +18,7 @@ class MediaDetail extends Component {
     }
 
     render() {
+        // console.log(this.props.selected)
         return (
             <SafeAreaView style={styles.detailContainer}>
                 <MaskedView 
@@ -56,9 +58,32 @@ class MediaDetail extends Component {
                                 </View>
                             )}
                             <View style={styles.descriptionBox}>
-                                <Text style={{ fontSize: 25, fontWeight: 'bold' }} >
-                                    {this.props.selected.title ? this.props.selected.title : this.props.selected.name}
-                                </Text>
+                                <View style={{ width: '100%', paddingBottom: 3, minHeight: 50, justifyContent: 'center' }}>
+                                    <Text style={{ fontSize: 30, fontWeight: 'bold', width: '75%' }} >
+                                        {this.props.selected.title ? this.props.selected.title : this.props.selected.name}
+                                    </Text>
+                                    {this.props.selected.vote_average > 0 ? (
+                                        <AnimatedCircularProgress
+                                            size={50}
+                                            width={6}
+                                            backgroundWidth={5}
+                                            fill={this.props.selected.vote_average * 10}
+                                            tintColor="#ff0000"
+                                            tintColorSecondary="#00ff00"
+                                            backgroundColor="#cccccc"
+                                            arcSweepAngle={240}
+                                            rotation={240}
+                                            lineCap="round"
+                                            style={{ position: 'absolute' ,right: 12 }}
+                                        >
+                                            {
+                                                (fill) => (
+                                                    <Text style={{ fontSize: 20, textAlign: 'center', color: '#7591af' }}>{ this.props.selected.vote_average.toFixed(1).toString() }</Text>
+                                                )
+                                            }
+                                        </AnimatedCircularProgress>
+                                    ) : (<></>)}
+                                </View>
                                 <Text style={{ fontSize: 16, fontWeight: 'bold', marginTop: 5 }}>
                                     { this.props.selected.overview }
                                 </Text>
