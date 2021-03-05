@@ -90,7 +90,7 @@ export default function SearchContents({ navigation }) {
                 style={styles.backButton} 
                 icon="chevron-left" 
                 color={Colors.white} 
-                size={45} 
+                size={35} 
                 onPress={() => {
                     dispatch({
                         type: "SET_INSEARCH"
@@ -100,12 +100,14 @@ export default function SearchContents({ navigation }) {
             />
             <SearchBar 
                 containerStyle={styles.searchBarContainer} 
+                inputContainerStyle={{ height: '100%', borderRadius: 20 }}
                 platform="ios" 
                 cancelButtonTitle="Cancel" 
                 cancelButtonProps={{color:"#fff"}}
                 placeholder="Search movies and shows"
                 onChangeText={e => setQuery(e)}
                 value={query}
+                // round={true}
                 onSubmitEditing={() => {
                     // clear search results and fill in new results
                     dispatch({
@@ -155,14 +157,15 @@ const styles = StyleSheet.create({
     backButton: {
         position: "absolute",
         top: 40,
-        left: -5
+        left: 0
     },
     searchBarContainer: {
         position: "absolute",
-        top: 45,
-        left: 60,
-        width: "83%",
-        backgroundColor: "#f2784b",
+        top: 54,
+        left: 50,
+        height: 35,
+        width: "80%",
+        backgroundColor: "transparent",
         borderBottomColor: "transparent",
         borderTopColor: "transparent"
     },
@@ -182,7 +185,7 @@ const styles = StyleSheet.create({
         height: '40%'
     },
     maskContainerTop: {
-        marginTop: 92,
+        marginTop: 77,
         flex: 1, 
         width: "100%",
         alignItems: 'center'

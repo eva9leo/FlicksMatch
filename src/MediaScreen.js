@@ -80,7 +80,7 @@ export default function MediaScreen({ navigation }) {
                 style={styles.backButton} 
                 icon="chevron-left" 
                 color={Colors.white} 
-                size={45} 
+                size={35} 
                 onPress={() => {
                     navigation.goBack();
                 }}
@@ -90,7 +90,7 @@ export default function MediaScreen({ navigation }) {
                     style={styles.addButton} 
                     icon="check" 
                     color={Colors.white} 
-                    size={45} 
+                    size={35} 
                     onPress={selected.type === 'movie' ? addMovie : addTv}
                 />
             ) : (
@@ -98,7 +98,7 @@ export default function MediaScreen({ navigation }) {
                     style={styles.addButton} 
                     icon="delete" 
                     color={Colors.white} 
-                    size={45} 
+                    size={35} 
                     onPress={selected.type === 'movie' ? removeMovie : removeTv}
                 />
             )}

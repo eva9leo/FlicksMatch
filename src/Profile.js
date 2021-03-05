@@ -71,7 +71,7 @@ export default function Profile({ navigation }) {
                 </SafeAreaView>
                 </MaskedView>
             </MaskedView>
-            <IconButton style={styles.addButton} icon="plus" color={Colors.white} size={45} onPress={() => 
+            <IconButton style={styles.addButton} icon="plus" color={Colors.white} size={35} onPress={() => 
                 {
                     dispatch({
                         type: "CLEAR_SEARCHES"
@@ -82,7 +82,7 @@ export default function Profile({ navigation }) {
                     navigation.navigate("SearchContents");
                 }
                 }/>
-            <IconButton style={styles.homeButton} icon="home" color={Colors.white} size={45} onPress={() => navigation.navigate("Home")}/>
+            <IconButton style={styles.homeButton} icon="home" color={Colors.white} size={35} onPress={() => navigation.navigate("Home")}/>
             <View style={styles.logoutButtonContainer}>
                 <TouchableOpacity style={styles.buttonContainer} onPress={logout}>
                     <Text style={styles.buttonText}>Log Out</Text>
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     },
     titleText: {
         position: "absolute",
-        top: 68,
+        top: 60,
         color: 'white',
         fontSize: 25
     },
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
         height: '40%'
     },
     maskContainerTop: {
-        marginTop: 90,
+        marginTop: 70,
         flex: 1, 
         width: "100%",
         alignItems: 'center'

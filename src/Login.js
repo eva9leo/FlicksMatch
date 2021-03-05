@@ -7,7 +7,7 @@ export default function Login({ navigation }) {
     return (
         <KeyboardAvoidingView behavior="padding" style={styles.container}>
         <View style={styles.container}>
-            <IconButton style={styles.backButton} icon="chevron-left" color={Colors.white} size={45} onPress={() => navigation.goBack()}/>
+            <IconButton style={styles.backButton} icon="chevron-left" color={Colors.white} size={35} onPress={() => navigation.goBack()}/>
             <View style={styles.formContainer}>
                 <LoginForm/>
             </View>
