@@ -104,7 +104,7 @@ export default function Index() {
           })
           setTimeout(function(){
             dispatch({ type: 'SET_READY' })
-          }, 20)
+          }, 100)
         }
       })
       .catch((error) => {
