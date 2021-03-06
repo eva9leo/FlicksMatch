@@ -7,10 +7,10 @@ import ResultBox from './components/ResultBox'
 import { LinearGradient } from 'expo-linear-gradient'
 import MaskedView from '@react-native-masked-view/masked-view';
 import TransitionView from './components/TransitionView';
-import { CompareDates } from './helpers';
+import { CompareDates, ReversedCompareDates } from './helpers';
 
 export default function Profile({ navigation }) {
-    const [{ user, firstname, lastname, unsubscribe, shows, movies }, dispatch] = useStateValue();
+    const [{ user, firstname, lastname, unsubscribe, shows, movies, reverseOrder }, dispatch] = useStateValue();
 
     // const [scrollHeight, setScrollHeight] = useState(0);
     // const [contentHeight, setContentHeight] = useState(0);
@@ -55,7 +55,9 @@ export default function Profile({ navigation }) {
                         style={{}}
                         initialNumToRender={9}
                         numColumns={3}
-                        data={ [...movies, ...shows].sort(CompareDates) }
+                        data={
+                            reverseOrder ? [...movies, ...shows].sort(ReversedCompareDates) : [...movies, ...shows].sort(CompareDates)
+                        }
                         keyExtractor={keyExtractor}
                         renderItem={ renderItem }
                         style={{ paddingTop: 10, width: '100%' }}
@@ -89,7 +91,8 @@ export default function Profile({ navigation }) {
                     color={Colors.white} 
                     size={27} 
                     onPress={() => {
-                        Alert.alert('Filter place holder')
+                        // Alert.alert('Filter place holder')
+                        dispatch({type:'REVERSE_ORDER'})
                     }}
                 />
             </View>

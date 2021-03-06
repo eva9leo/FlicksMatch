@@ -10,10 +10,17 @@ export const initialState = {
     unsubscribe: null,
     insearch: false,
     ready: false,
+    orderBy: 'date',
+    reverseOrder: false,
 };
 
 export default function reducer(state, action) {
     switch(action.type) {
+        case 'REVERSE_ORDER':
+            return {
+                ...state,
+                reverseOrder: !state.reverseOrder
+            }
         case 'SET_READY':
             return {
                 ...state,
