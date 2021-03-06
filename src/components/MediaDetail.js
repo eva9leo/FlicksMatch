@@ -39,6 +39,7 @@ class MediaDetail extends Component {
                         }}
                         onContentSizeChange={this.onContentHeightChange}
                         scrollEnabled = { this.state.contentHeight > this.state.scrollHeight }
+                        bounces={ false }
                         >
                             <View style={{ flexGrow: 1, width: '100%', alignItems: 'center' }}>
                             {this.props.selected.poster_path ? (
