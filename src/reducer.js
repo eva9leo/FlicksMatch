@@ -9,10 +9,16 @@ export const initialState = {
     lastname: null,
     unsubscribe: null,
     insearch: false,
+    ready: false,
 };
 
 export default function reducer(state, action) {
     switch(action.type) {
+        case 'SET_READY':
+            return {
+                ...state,
+                ready: !state.ready
+            };
         case 'SET_INSEARCH': 
             return {
                 ...state,

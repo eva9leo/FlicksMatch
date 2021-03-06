@@ -22,6 +22,7 @@ export default function Profile({ navigation }) {
     const logout = () => {
         if (user) {
             // unsubscribe();
+            dispatch({type: 'SET_READY'})
             dispatch({type: 'CLEAR_CONTENT'})
             auth.signOut()
         }

@@ -17,7 +17,7 @@ import SearchContents from "./SearchContents"
 export default function Index() {
   const Stack = createStackNavigator();
 
-  const [{ user, shows, movies }, dispatch] = useStateValue();
+  const [{ user, shows, movies, ready }, dispatch] = useStateValue();
 
   const searchMovieById = async (movieId) => {
     fetch(
@@ -102,8 +102,12 @@ export default function Index() {
           userData.shows.forEach(function(show) {
             searchShowById(show)
           })
+          setTimeout(function(){
+            dispatch({ type: 'SET_READY' })
+          }, 20)
         }
-      }).catch((error) => {
+      })
+      .catch((error) => {
         console.log("Error getting document", error)
       })
       // const unsubscribe = db.collection('users').doc(user.uid).onSnapshot((doc) => {
@@ -136,7 +140,7 @@ export default function Index() {
   return (
       <NavigationContainer>
         <Stack.Navigator screenOptions={{headerShown: false, gestureEnabled: false}}>
-          {user ? (
+          {ready ? (
             <>
               <Stack.Screen name="Profile" component={Profile} />
               <Stack.Screen name="Home" component={Home} />
