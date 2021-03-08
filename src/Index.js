@@ -19,7 +19,29 @@ export default function Index() {
 
   const [{ user, shows, movies, ready }, dispatch] = useStateValue();
 
-  const searchMovieById = async (movieId) => {
+  // const recMoviesById = async (movieId) => {
+  //   fetch(
+  //     "https://api.themoviedb.org/3/movie/" +
+  //     movieId + "/recommendations?api_key=" +
+  //     TMDB_KEY + "&language=en-US&page=1"
+  //   ).then((response) => response.json())
+  //   .then((json) => {
+  //     console.log(json)
+  //   }).catch((error) => {Alert.alert(error)})
+  // }
+
+  // const recShowsById = async (showId) => {
+  //   fetch(
+  //     "https://api.themoviedb.org/3/tv/" +
+  //     showId + "/recommendations?api_key=" +
+  //     TMDB_KEY + "&language=en-US&page=1"
+  //   ).then((response) => response.json())
+  //   .then((json) => {
+  //     console.log(json)
+  //   }).catch((error) => {Alert.alert(error)})
+  // }
+
+  const searchMovieById = async (movieId, rec=null) => {
     fetch(
       "https://api.themoviedb.org/3/movie/" +
       movieId + "?api_key=" +
@@ -27,23 +49,40 @@ export default function Index() {
       "&language=en-US"
     ).then((response) => response.json())
     .then((item) => {
-      dispatch({
-        type: "ADD_MOVIE",
-        item: {
-          id: item.id,
-          name: item.name,
-          title: item.title,
-          poster_path: item.poster_path,
-          overview: item.overview,
-          vote_average: item.vote_average,
-          release_date: item.release_date,
-          type: 'movie'
-        }
-      });
+      if (rec) {
+        dispatch({
+          type: "ADD_MOVIE_REC",
+          item: {
+            id: item.id,
+            name: item.name,
+            title: item.title,
+            poster_path: item.poster_path,
+            overview: item.overview,
+            vote_average: item.vote_average,
+            release_date: item.release_date,
+            type: 'movie',
+            recBy: rec
+          }
+        });
+      } else {
+        dispatch({
+          type: "ADD_MOVIE",
+          item: {
+            id: item.id,
+            name: item.name,
+            title: item.title,
+            poster_path: item.poster_path,
+            overview: item.overview,
+            vote_average: item.vote_average,
+            release_date: item.release_date,
+            type: 'movie'
+          }
+        });
+      }
     })
   }
 
-  const searchShowById = async (showId) => {
+  const searchShowById = async (showId, rec=null) => {
     fetch(
       "https://api.themoviedb.org/3/tv/" +
       showId + "?api_key=" +
@@ -51,19 +90,36 @@ export default function Index() {
       "&language=en-US"
     ).then((response) => response.json())
     .then((item) => {
-      dispatch({
-        type: "ADD_SHOW",
-        item: {
-          id: item.id,
-          name: item.name,
-          title: item.title,
-          poster_path: item.poster_path,
-          overview: item.overview,
-          vote_average: item.vote_average,
-          release_date: item.first_air_date,
-          type: 'tv'
-        }
-      });
+      if (rec) {
+        dispatch({
+          type: "ADD_SHOW_REC",
+          item: {
+            id: item.id,
+            name: item.name,
+            title: item.title,
+            poster_path: item.poster_path,
+            overview: item.overview,
+            vote_average: item.vote_average,
+            release_date: item.first_air_date,
+            type: 'tv',
+            recBy: rec
+          }
+        });
+      } else {
+        dispatch({
+          type: "ADD_SHOW",
+          item: {
+            id: item.id,
+            name: item.name,
+            title: item.title,
+            poster_path: item.poster_path,
+            overview: item.overview,
+            vote_average: item.vote_average,
+            release_date: item.first_air_date,
+            type: 'tv'
+          }
+        });
+      }
     })
   }
   
@@ -105,6 +161,13 @@ export default function Index() {
           setTimeout(function(){
             dispatch({ type: 'SET_READY' })
           }, 100)
+          for (const rec in userData.movieRecs) {
+            searchMovieById(rec, userData.movieRecs[rec.toString()])
+            // console.log(rec + ': ' + Array.isArray(userData.movieRecs[rec.toString()]))
+          }
+          for (const rec in userData.showRecs) {
+            searchShowById(rec, userData.showRecs[rec.toString()])
+          }
         }
       })
       .catch((error) => {

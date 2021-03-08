@@ -14,6 +14,8 @@ export const initialState = {
     reverseOrder: false,
     searchOrderBy: 'date',
     searchReverseOrder: false,
+    movieRecommendations: [],
+    showRecommendations: [],
 };
 
 export default function reducer(state, action) {
@@ -72,6 +74,16 @@ export default function reducer(state, action) {
             return {
                 ...state,
                 movies: [ ...state.movies, action.item]
+            }
+        case "ADD_MOVIE_REC":
+            return {
+                ...state,
+                movieRecommendations: [ ...state.movieRecommendations, action.item ]
+            }
+        case "ADD_SHOW_REC":
+            return {
+                ...state,
+                showRecommendations: [ ...state.showRecommendations, action.item ]
             }
         case "REMOVE_SHOW":
             return {

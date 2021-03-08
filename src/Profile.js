@@ -11,7 +11,7 @@ import { CompareDates, ReversedCompareDates } from './helpers';
 
 export default function Profile({ navigation }) {
     const flatListRef = React.useRef()
-    const [{ user, firstname, lastname, unsubscribe, shows, movies, reverseOrder }, dispatch] = useStateValue();
+    const [{ user, firstname, lastname, unsubscribe, shows, movies, reverseOrder, showRecommendations, movieRecommendations }, dispatch] = useStateValue();
 
     // const [scrollHeight, setScrollHeight] = useState(0);
     // const [contentHeight, setContentHeight] = useState(0);
@@ -37,7 +37,9 @@ export default function Profile({ navigation }) {
         </TransitionView>
         , []
     );
-
+    
+    console.log(movieRecommendations)
+    console.log(showRecommendations)
     return (
         <View style={styles.container}>
             {/* <Text>{"Hello, " + firstname + " " + lastname }</Text> */}

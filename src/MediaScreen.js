@@ -4,11 +4,52 @@ import { IconButton, Colors } from 'react-native-paper'
 import { useStateValue } from './StateProvider';
 import { db } from './firebaseConfig';
 import firebase from 'firebase';
-import MediaDetail from './components/MediaDetail'
+import MediaDetail from './components/MediaDetail';
+import { TMDB_KEY } from "@env";
 
 export default function MediaScreen({ navigation }) {
-    const [{ selected, user, insearch, movies, shows }, dispatch] = useStateValue();
+    const [{ selected, user, insearch, movies, shows, movieRecommendations, showRecommendations }, dispatch] = useStateValue();
     const imgUrl = "https://image.tmdb.org/t/p/original";
+
+    const recMoviesById = async (movieId) => {
+      fetch(
+        "https://api.themoviedb.org/3/movie/" +
+        movieId + "/recommendations?api_key=" +
+        TMDB_KEY + "&language=en-US&page=1"
+      ).then((response) => response.json())
+      .then((json) => {
+        json.results.forEach(function(item){
+            if (movieRecommendations.some(movie => movie.id === item.id)) {
+                // this recommendation already exist
+            } else {
+                // this is a new recommendation
+                const newRec = {}
+                newRec['movieRecs.' + item.id] = [selected.id]
+                db.collection('users').doc(user.uid).update(newRec)
+            }
+        })
+      }).catch((error) => {Alert.alert(error)})
+    }
+
+    const recShowsById = async (showId) => {
+        fetch(
+          "https://api.themoviedb.org/3/tv/" +
+          showId + "/recommendations?api_key=" +
+          TMDB_KEY + "&language=en-US&page=1"
+        ).then((response) => response.json())
+        .then((json) => {
+            json.results.forEach(function(item){
+                if (showRecommendations.some(show => show.id === item.id)) {
+                    // this recommendation already exist
+                } else {
+                    // this is a new recommendation
+                    const newRec = {}
+                    newRec['showRecs.' + item.id] = [selected.id]
+                    db.collection('users').doc(user.uid).update(newRec)
+                }
+            })
+        }).catch((error) => {Alert.alert(error)})
+      }
 
     const addMovie = e => {
         if (movies.some(item => item.id === selected.id)) {
@@ -22,6 +63,7 @@ export default function MediaScreen({ navigation }) {
                     type: 'ADD_MOVIE',
                     item: selected
                 });
+                recMoviesById(selected.id)
                 navigation.goBack();
             }
             ).catch(error => Alert.alert(error.message))
@@ -40,6 +82,9 @@ export default function MediaScreen({ navigation }) {
                     type: 'ADD_SHOW',
                     item: selected
                 });
+                recShowsById(selected.id).then((results) => {
+                    console.log(results)
+                })
                 navigation.goBack();
             }).catch(error => Alert.alert(error.message))
         }

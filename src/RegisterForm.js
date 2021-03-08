@@ -19,7 +19,9 @@ export default function RegisterForm() {
                         firstName: firstName,
                         lastName: lastName,
                         movies: [],
-                        shows: []
+                        shows: [],
+                        showRecs: {},
+                        movieRecs: {},
                     });
                 }
             }).catch(error => Alert.alert(error.message))
