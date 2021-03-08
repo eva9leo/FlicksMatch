@@ -10,6 +10,7 @@ import TransitionView from './components/TransitionView';
 import { CompareDates, ReversedCompareDates } from './helpers';
 
 export default function Profile({ navigation }) {
+    const flatListRef = React.useRef()
     const [{ user, firstname, lastname, unsubscribe, shows, movies, reverseOrder }, dispatch] = useStateValue();
 
     // const [scrollHeight, setScrollHeight] = useState(0);
@@ -53,6 +54,7 @@ export default function Profile({ navigation }) {
                 <SafeAreaView style={styles.resultsContainer}>
                     <FlatList 
                         style={{}}
+                        ref={flatListRef}
                         initialNumToRender={9}
                         numColumns={3}
                         data={
@@ -93,6 +95,7 @@ export default function Profile({ navigation }) {
                     onPress={() => {
                         // Alert.alert('Filter place holder')
                         dispatch({type:'REVERSE_ORDER'})
+                        flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
                     }}
                 />
             </View>

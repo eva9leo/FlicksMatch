@@ -12,6 +12,8 @@ export const initialState = {
     ready: false,
     orderBy: 'date',
     reverseOrder: false,
+    searchOrderBy: 'date',
+    searchReverseOrder: false,
 };
 
 export default function reducer(state, action) {
@@ -20,6 +22,11 @@ export default function reducer(state, action) {
             return {
                 ...state,
                 reverseOrder: !state.reverseOrder
+            }
+        case 'REVERSE_SEARCH_ORDER':
+            return {
+                ...state,
+                searchReverseOrder: !state.searchReverseOrder
             }
         case 'SET_READY':
             return {

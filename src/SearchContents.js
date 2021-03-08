@@ -8,10 +8,11 @@ import { useStateValue } from './StateProvider';
 import { LinearGradient } from 'expo-linear-gradient'
 import MaskedView from '@react-native-masked-view/masked-view';
 import TransitionView from './components/TransitionView';
-import { CompareDates } from './helpers';
+import { CompareDates, ReversedCompareDates } from './helpers';
 
 export default function SearchContents({ navigation }) {
-    const [{ searches }, dispatch] = useStateValue();
+    const flatListRef = React.useRef()
+    const [{ searches, searchReverseOrder }, dispatch] = useStateValue();
 
     const imgUrl = "https://image.tmdb.org/t/p/w185";
     const [query, setQuery] = useState("");
@@ -97,9 +98,10 @@ export default function SearchContents({ navigation }) {
                 <SafeAreaView style={styles.resultsContainer}>
                     <FlatList 
                         style={{}}
+                        ref={flatListRef}
                         initialNumToRender={9}
                         numColumns={3}
-                        data={ searches.sort(CompareDates) }
+                        data={ searches.sort(searchReverseOrder ? ReversedCompareDates : CompareDates) }
                         keyExtractor={keyExtractor}
                         renderItem={ renderItem }
                         style={{ paddingTop: 23, width: '100%' }}
@@ -128,7 +130,9 @@ export default function SearchContents({ navigation }) {
                 color={Colors.white} 
                 size={27} 
                 onPress={() => {
-                    Alert.alert('Filter place holder')
+                    // Alert.alert('Filter place holder')
+                    dispatch({type:'REVERSE_SEARCH_ORDER'})
+                    flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
                 }}
             />
             <SearchBar 
