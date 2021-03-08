@@ -38,7 +38,7 @@ export default function Profile({ navigation }) {
         , []
     );
     
-    console.log(showRecommendations)
+    console.log(movieRecommendations)
     return (
         <View style={styles.container}>
             {/* <Text>{"Hello, " + firstname + " " + lastname }</Text> */}

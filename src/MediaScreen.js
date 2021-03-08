@@ -166,7 +166,38 @@ export default function MediaScreen({ navigation }) {
                 id: selected.id
             })
         }).then(() => {
-            // console.log(movies)
+            // update any recommended movies that were related to the movie being deleted
+            const recs = movieRecommendations.filter(item => item.recBy.includes(selected.id))
+            recs.forEach(function(rec) {
+                if (rec.recBy.length === 1) {
+                    // when the recommended movie should be removed
+                    const newRec = {}
+                    newRec['movieRecs.' + rec.id] = firebase.firestore.FieldValue.delete()
+                    db.collection('users').doc(user.uid).update(newRec)
+                    .then(() => {
+                        dispatch({
+                            type: "DELETE_MOVIE_REC",
+                            id: rec.id
+                        })
+                    })
+                } else {
+                    // when the recommended movie should be updated
+                    const newRec = {}
+                    const curIndex = rec.recBy.findIndex(function(m) {
+                        return m === selected.id
+                    })
+                    if (curIndex > -1) {
+                        rec.recBy.splice(curIndex, 1)
+                    }
+                    newRec['movieRecs.' + rec.id] = rec.recBy
+                    db.collection('users').doc(user.uid).update(newRec).then(
+                        dispatch({
+                            type: "REMOVE_MOVIE_REC",
+                            item: [rec.id, selected.id]
+                        })
+                    )
+                }
+            })
             navigation.goBack();
         }).catch(error => Alert.alert(error.message))
     }
