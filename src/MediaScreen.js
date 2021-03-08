@@ -120,6 +120,17 @@ export default function MediaScreen({ navigation }) {
                     type: 'ADD_MOVIE',
                     item: selected
                 });
+                // when movie is in recommended list
+                if (movieRecommendations.some(movie => movie.id === selected.id)){
+                    const newRec = {}
+                    newRec['movieRecs.' + selected.id] = firebase.firestore.FieldValue.delete()
+                    db.collection('users').doc(user.uid).update(newRec).then(() => {
+                        dispatch({
+                            type: "DELETE_MOVIE_REC",
+                            id: selected.id,
+                        })
+                    })
+                }
                 recMoviesById(selected.id)
                 navigation.goBack();
             }
