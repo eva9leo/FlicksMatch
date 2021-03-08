@@ -80,6 +80,26 @@ export default function reducer(state, action) {
                 ...state,
                 movieRecommendations: [ ...state.movieRecommendations, action.item ]
             }
+        case "UPDATE_MOVIE_REC":
+            const recId = action.item[0]
+            const refId = action.item[1]
+            const recIndex = state.showRecommendations.findIndex(function(rec) {
+                return rec.id === recId
+            })
+            state.movieRecommendations[recIndex].recBy = [ ...state.movieRecommendations[recIndex].recBy, refId ]
+            return {
+                ...state,
+            }
+        case "UPDATE_SHOW_REC":
+            const showRecId = action.item[0]
+            const showRefId = action.item[1]
+            const showRecIndex = state.showRecommendations.findIndex(function(rec) {
+                return rec.id === showRecId
+            })
+            state.showRecommendations[showRecIndex].recBy = [ ...state.showRecommendations[showRecIndex].recBy, showRefId ]
+            return {
+                ...state,
+            }
         case "ADD_SHOW_REC":
             return {
                 ...state,

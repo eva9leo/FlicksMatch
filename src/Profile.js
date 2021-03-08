@@ -38,7 +38,6 @@ export default function Profile({ navigation }) {
         , []
     );
     
-    console.log(movieRecommendations)
     console.log(showRecommendations)
     return (
         <View style={styles.container}>
