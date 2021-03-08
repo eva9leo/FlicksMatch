@@ -19,39 +19,42 @@ export default function MediaScreen({ navigation }) {
       ).then((response) => response.json())
       .then((json) => {
         json.results.forEach(function(item){
-            if (movieRecommendations.some(movie => movie.id === item.id)) {
-                // this recommendation already exist
-                const curRecIndex = movieRecommendations.findIndex(function(rec) {
-                    return rec.id === item.id
-                })
-                const newRec = {}
-                newRec['movieRecs.' + item.id] = [ ...movieRecommendations[curRecIndex].recBy, selected.id]
-                db.collection('users').doc(user.uid).update(newRec).then(() => {
-                    dispatch({
-                        type: "UPDATE_MOVIE_REC",
-                        item: [item.id, selected.id]
+            if (!(movies.some(movie => movie.id === item.id))) {
+                // when recommended movie is not already on the watched list
+                if (movieRecommendations.some(movie => movie.id === item.id)) {
+                    // this recommendation already exist
+                    const curRecIndex = movieRecommendations.findIndex(function(rec) {
+                        return rec.id === item.id
                     })
-                })
-            } else {
-                // this is a new recommendation
-                const newRec = {}
-                newRec['movieRecs.' + item.id] = [selected.id]
-                db.collection('users').doc(user.uid).update(newRec).then(() => {
-                    dispatch({
-                        type: "ADD_MOVIE_REC",
-                        item: {
-                            id: item.id,
-                            name: item.name,
-                            title: item.title,
-                            poster_path: item.poster_path,
-                            overview: item.overview,
-                            vote_average: item.vote_average,
-                            release_date: item.release_date,
-                            type: 'movie',
-                            recBy: [selected.id]
-                        }
+                    const newRec = {}
+                    newRec['movieRecs.' + item.id] = [ ...movieRecommendations[curRecIndex].recBy, selected.id]
+                    db.collection('users').doc(user.uid).update(newRec).then(() => {
+                        dispatch({
+                            type: "UPDATE_MOVIE_REC",
+                            item: [item.id, selected.id]
+                        })
                     })
-                })
+                } else {
+                    // this is a new recommendation
+                    const newRec = {}
+                    newRec['movieRecs.' + item.id] = [selected.id]
+                    db.collection('users').doc(user.uid).update(newRec).then(() => {
+                        dispatch({
+                            type: "ADD_MOVIE_REC",
+                            item: {
+                                id: item.id,
+                                name: item.name,
+                                title: item.title,
+                                poster_path: item.poster_path,
+                                overview: item.overview,
+                                vote_average: item.vote_average,
+                                release_date: item.release_date,
+                                type: 'movie',
+                                recBy: [selected.id]
+                            }
+                        })
+                    })
+                }
             }
         })
       }).catch((error) => {Alert.alert(error)})
@@ -65,39 +68,41 @@ export default function MediaScreen({ navigation }) {
         ).then((response) => response.json())
         .then((json) => {
             json.results.forEach(function(item){
-                if (showRecommendations.some(show => show.id === item.id)) {
-                    // this recommendation already exist
-                    const curRecIndex = showRecommendations.findIndex(function(rec) {
-                        return rec.id === item.id
-                    })
-                    const newRec = {}
-                    newRec['showRecs.' + item.id] = [ ...showRecommendations[curRecIndex].recBy, selected.id]
-                    db.collection('users').doc(user.uid).update(newRec).then(() => {
-                        dispatch({
-                            type: "UPDATE_SHOW_REC",
-                            item: [item.id, selected.id]
+                if (!(shows.some(show => show.id === item.id))) {
+                    if (showRecommendations.some(show => show.id === item.id)) {
+                        // this recommendation already exist
+                        const curRecIndex = showRecommendations.findIndex(function(rec) {
+                            return rec.id === item.id
                         })
-                    })
-                } else {
-                    // this is a new recommendation
-                    const newRec = {}
-                    newRec['showRecs.' + item.id] = [selected.id]
-                    db.collection('users').doc(user.uid).update(newRec).then(() => {
-                        dispatch({
-                            type: "ADD_SHOW_REC",
-                            item: {
-                                id: item.id,
-                                name: item.name,
-                                title: item.title,
-                                poster_path: item.poster_path,
-                                overview: item.overview,
-                                vote_average: item.vote_average,
-                                release_date: item.first_air_date,
-                                type: 'tv',
-                                recBy: [selected.id]
-                            }
+                        const newRec = {}
+                        newRec['showRecs.' + item.id] = [ ...showRecommendations[curRecIndex].recBy, selected.id]
+                        db.collection('users').doc(user.uid).update(newRec).then(() => {
+                            dispatch({
+                                type: "UPDATE_SHOW_REC",
+                                item: [item.id, selected.id]
+                            })
                         })
-                    })
+                    } else {
+                        // this is a new recommendation
+                        const newRec = {}
+                        newRec['showRecs.' + item.id] = [selected.id]
+                        db.collection('users').doc(user.uid).update(newRec).then(() => {
+                            dispatch({
+                                type: "ADD_SHOW_REC",
+                                item: {
+                                    id: item.id,
+                                    name: item.name,
+                                    title: item.title,
+                                    poster_path: item.poster_path,
+                                    overview: item.overview,
+                                    vote_average: item.vote_average,
+                                    release_date: item.first_air_date,
+                                    type: 'tv',
+                                    recBy: [selected.id]
+                                }
+                            })
+                        })
+                    }
                 }
             })
         }).catch((error) => {Alert.alert(error)})
