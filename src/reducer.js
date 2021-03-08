@@ -116,6 +116,24 @@ export default function reducer(state, action) {
             return {
                 ...state,
             }
+        case "REMOVE_SHOW_REC":
+            const showRemoveIndex = state.showRecommendations.findIndex(function(rec) {
+                return rec.id === action.item[0]
+            })
+            const j = state.showRecommendations[showRemoveIndex].recBy.findIndex(function(m) {
+                return m === action.item[1]
+            })
+            if (j > -1) {
+                state.showRecommendations[showRemoveIndex].recBy.splice(i, 1)
+            }
+            return {
+                ...state,
+            }
+        case "DELETE_SHOW_REC":
+            return {
+                ...state,
+                showRecommendations: state.showRecommendations.filter(item => item.id !== action.id)
+            }
         case "ADD_SHOW_REC":
             return {
                 ...state,

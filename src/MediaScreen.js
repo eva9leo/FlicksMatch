@@ -152,6 +152,38 @@ export default function MediaScreen({ navigation }) {
                 id: selected.id
             })
         }).then(() => {
+            // update any recommended shows that were related to the show being deleted
+            const recs = showRecommendations.filter(item => item.recBy.includes(selected.id))
+            recs.forEach(function(rec) {
+                if (rec.recBy.length === 1) {
+                    // when the recommended show should be removed
+                    const newRec = {}
+                    newRec['showRecs.' + rec.id] = firebase.firestore.FieldValue.delete()
+                    db.collection('users').doc(user.uid).update(newRec)
+                    .then(() => {
+                        dispatch({
+                            type: "DELETE_SHOW_REC",
+                            id: rec.id
+                        })
+                    })
+                } else {
+                    // when the recommended show should be updated
+                    const newRec = {}
+                    const curIndex = rec.recBy.findIndex(function(m) {
+                        return m === selected.id
+                    })
+                    if (curIndex > -1) {
+                        rec.recBy.splice(curIndex, 1)
+                    }
+                    newRec['showRecs.' + rec.id] = rec.recBy
+                    db.collection('users').doc(user.uid).update(newRec).then(
+                        dispatch({
+                            type: "REMOVE_SHOW_REC",
+                            item: [rec.id, selected.id]
+                        })
+                    )
+                }
+            })
             navigation.goBack();
         }).catch(error => Alert.alert(error.message))
     }
