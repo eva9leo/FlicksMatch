@@ -1,12 +1,63 @@
-import React, { useContext } from 'react'
-import { View, Text, Button, StyleSheet, Alert, TouchableOpacity } from "react-native"
+import React, { useContext, useCallback } from 'react'
+import { View, Text, Button, StyleSheet, Alert, TouchableOpacity, SafeAreaView, FlatList } from "react-native"
+import { useStateValue } from './StateProvider'
 import { IconButton, Colors } from 'react-native-paper'
+import TransitionView from './components/TransitionView';
+import ResultBox from './components/ResultBox'
+import { CompareDates, ReversedCompareDates } from './helpers';
+import { LinearGradient } from 'expo-linear-gradient'
+import MaskedView from '@react-native-masked-view/masked-view';
 
 export default function Home({ navigation }) {
+    const [{ user, firstname, lastname, shows, movies, reverseOrder, showRecommendations, movieRecommendations }, dispatch] = useStateValue();
+
+    const flatListRef = React.useRef()
+    const keyExtractor = useCallback((item) => item.id.toString(), []);
+    const renderItem = useCallback(
+        ({ item, index }) => 
+        <TransitionView index={ index }>
+            <ResultBox item={item} navigation={ navigation } dispatch={ dispatch } />
+        </TransitionView>
+        , []
+    );
+
     return (
         <View style={styles.container}>
-            <Text>{"This is the home page"}</Text>
-            <IconButton style={styles.backButton} icon="account" color={Colors.white} size={45} onPress={() => navigation.goBack()}/>
+            <MaskedView 
+                style={styles.maskContainerTop}
+                maskElement={ <LinearGradient style={styles.fadeContainer} colors={['transparent', 'black'] } locations={[0.055, 0.075]} /> }
+            >
+                <MaskedView 
+                style={styles.maskContainerBottom}
+                maskElement={ <LinearGradient style={styles.fadeContainer} colors={['black', 'transparent'] } locations={[0.93, 0.95]} /> }
+                >
+                <SafeAreaView style={styles.resultsContainer}>
+                    <FlatList 
+                        style={{}}
+                        ref={flatListRef}
+                        initialNumToRender={9}
+                        numColumns={3}
+                        data={
+                            [
+                                ...movieRecommendations.filter(movie => !(movies.some(item => item.id === movie.id))),
+                                ...showRecommendations.filter(show => !(shows.some(item => item.id === show.id))),
+                            ]
+                        }
+                        keyExtractor={keyExtractor}
+                        renderItem={ renderItem }
+                        style={{ paddingTop: 10, width: '100%' }}
+                        contentContainerStyle={styles.contentContainerStyle}
+                        showsVerticalScrollIndicator={false}
+                    />
+                </SafeAreaView>
+                </MaskedView>
+            </MaskedView>
+            <IconButton style={styles.backButton} icon="account" color={Colors.white} size={35} onPress={() => {
+                dispatch({
+                    type: "SET_INSEARCH"
+                });
+                navigation.goBack()
+            }}/>
         </View>
     )
 }
@@ -19,30 +70,46 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center"
     },
-    buttonContainer: {
-        elevation: 8,
-        backgroundColor: "#009688",
-        borderRadius: 10,
-        paddingVertical: 10,
-        paddingHorizontal: 12,
-        height: 40,
-        marginBottom: 10
-      },
-    buttonText: {
-        fontSize: 18,
-        color: "#fff",
-        fontWeight: "bold",
-        alignSelf: "center",
-        textTransform: "uppercase"
-    },
-    profileButtonContainer: {
-        position: "absolute",
-        bottom: 40,
-        width: "80%",
-    },
     backButton: {
         position: "absolute",
         top: 40,
         left: -5
-    }
+    },
+    resultsContainer: {
+        marginTop: 25,
+        flex: 1, 
+        width: "100%",
+        alignItems: 'center'
+    },
+    resultContainer: {
+        height: '100%', 
+        width: '100%', 
+        flex: 1
+    },
+    touchContainer: {
+        width: '30%',
+        height: '40%'
+    },
+    maskContainerTop: {
+        marginTop: 60,
+        flex: 1, 
+        width: "100%",
+        alignItems: 'center'
+    },
+    fadeContainer: {
+        flex: 1, 
+        width: "100%",
+        alignItems: 'center'
+    },
+    maskContainerBottom: {
+        flex: 1, 
+        width: "100%",
+        alignItems: 'center',
+        marginBottom: 50
+    },
+    contentContainerStyle: {
+        width: '100%',
+        paddingTop: 15,
+        paddingBottom: 50
+    },
 });

@@ -38,7 +38,6 @@ export default function Profile({ navigation }) {
         , []
     );
     
-    console.log(showRecommendations)
     return (
         <View style={styles.container}>
             {/* <Text>{"Hello, " + firstname + " " + lastname }</Text> */}
@@ -113,7 +112,12 @@ export default function Profile({ navigation }) {
                     navigation.navigate("SearchContents");
                 }
                 }/>
-            <IconButton style={styles.homeButton} icon="home" color={Colors.white} size={35} onPress={() => navigation.navigate("Home")}/>
+            <IconButton style={styles.homeButton} icon="home" color={Colors.white} size={35} onPress={() => {
+                dispatch({
+                    type: "SET_INSEARCH"
+                });
+                navigation.navigate("Home")
+            }}/>
             <View style={styles.logoutButtonContainer}>
                 <TouchableOpacity style={styles.buttonContainer} onPress={logout}>
                     <Text style={styles.buttonText}>Log Out</Text>
