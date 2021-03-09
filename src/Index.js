@@ -16,7 +16,6 @@ import SearchContents from "./SearchContents"
 
 export default function Index() {
   const Stack = createStackNavigator();
-
   const [{ user, shows, movies, ready }, dispatch] = useStateValue();
 
   // const recMoviesById = async (movieId) => {
@@ -40,7 +39,6 @@ export default function Index() {
   //     console.log(json)
   //   }).catch((error) => {Alert.alert(error)})
   // }
-
   const searchMovieById = async (movieId, rec=null) => {
     fetch(
       "https://api.themoviedb.org/3/movie/" +
@@ -51,7 +49,7 @@ export default function Index() {
     .then((item) => {
       if (rec) {
         dispatch({
-          type: "ADD_MOVIE_REC",
+          type: "ADD_RECOMMENDATION",
           item: {
             id: item.id,
             name: item.name,
@@ -92,7 +90,7 @@ export default function Index() {
     .then((item) => {
       if (rec) {
         dispatch({
-          type: "ADD_SHOW_REC",
+          type: "ADD_RECOMMENDATION",
           item: {
             id: item.id,
             name: item.name,
@@ -162,11 +160,27 @@ export default function Index() {
             dispatch({ type: 'SET_READY' })
           }, 100)
           for (const rec in userData.movieRecs) {
-            searchMovieById(rec, userData.movieRecs[rec.toString()])
+            dispatch({
+              type: "ADD_MOVIE_REC",
+              item: {
+                id: rec,
+                type: 'movie',
+                recBy: userData.movieRecs[rec.toString()]
+              }
+            })
+            // searchMovieById(rec, userData.movieRecs[rec.toString()])
             // console.log(rec + ': ' + Array.isArray(userData.movieRecs[rec.toString()]))
           }
           for (const rec in userData.showRecs) {
-            searchShowById(rec, userData.showRecs[rec.toString()])
+            dispatch({
+              type: "ADD_SHOW_REC",
+              item: {
+                id: rec,
+                type: 'tv',
+                recBy: userData.showRecs[rec.toString()]
+              }
+            })
+            // searchShowById(rec, userData.showRecs[rec.toString()])
           }
         }
       })

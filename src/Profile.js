@@ -7,7 +7,8 @@ import ResultBox from './components/ResultBox'
 import { LinearGradient } from 'expo-linear-gradient'
 import MaskedView from '@react-native-masked-view/masked-view';
 import TransitionView from './components/TransitionView';
-import { CompareDates, ReversedCompareDates } from './helpers';
+import { TMDB_KEY } from "@env";
+import { CompareDates, ReversedCompareDates, CompareMatch } from './helpers';
 
 export default function Profile({ navigation }) {
     const flatListRef = React.useRef()
@@ -19,6 +20,66 @@ export default function Profile({ navigation }) {
     // const onContentHeightChange = (ContentWidth, ContentHeight) => {
     //     setContentHeight(ContentHeight)
     // }
+    const searchMovieById = async (movieId, rec=null) => {
+        fetch(
+          "https://api.themoviedb.org/3/movie/" +
+          movieId + "?api_key=" +
+          TMDB_KEY +
+          "&language=en-US"
+        ).then((response) => response.json())
+        .then((item) => {
+            dispatch({
+                type: "ADD_RECOMMENDATION",
+                item: {
+                    id: item.id,
+                    name: item.name,
+                    title: item.title,
+                    poster_path: item.poster_path,
+                    overview: item.overview,
+                    vote_average: item.vote_average,
+                    release_date: item.release_date,
+                    type: 'movie',
+                }
+            })
+        })
+    }
+
+    const searchShowById = async (showId, rec=null) => {
+        fetch(
+          "https://api.themoviedb.org/3/tv/" +
+          showId + "?api_key=" +
+          TMDB_KEY +
+          "&language=en-US"
+        ).then((response) => response.json())
+        .then((item) => {
+            dispatch({
+                type: "ADD_RECOMMENDATION",
+                item: {
+                  id: item.id,
+                  name: item.name,
+                  title: item.title,
+                  poster_path: item.poster_path,
+                  overview: item.overview,
+                  vote_average: item.vote_average,
+                  release_date: item.first_air_date,
+                  type: 'tv'
+                }
+            });
+        })
+    }
+
+    const fillRecommendations = () => {
+        const topRecs = [...movieRecommendations.filter(movie => !(movies.some(item => item.id === parseInt(movie.id)))),
+            ...showRecommendations.filter(show => !(shows.some(item => item.id === parseInt(show.id))))]
+            .sort(CompareMatch).splice(0, Math.min(30, movieRecommendations.length + showRecommendations.length))
+        topRecs.forEach(function(media) {
+            if (media.type === 'tv') {
+                searchShowById(media.id)
+            } else {
+                searchMovieById(media.id)
+            }
+        })
+    }
 
     const logout = () => {
         if (user) {
@@ -113,6 +174,7 @@ export default function Profile({ navigation }) {
                 }
                 }/>
             <IconButton style={styles.homeButton} icon="home" color={Colors.white} size={35} onPress={() => {
+                fillRecommendations();
                 dispatch({
                     type: "SET_INSEARCH"
                 });

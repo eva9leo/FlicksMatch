@@ -9,7 +9,7 @@ import { LinearGradient } from 'expo-linear-gradient'
 import MaskedView from '@react-native-masked-view/masked-view';
 
 export default function Home({ navigation }) {
-    const [{ user, firstname, lastname, shows, movies, reverseOrder, showRecommendations, movieRecommendations }, dispatch] = useStateValue();
+    const [{ user, firstname, lastname, shows, movies, reverseOrder, showRecommendations, movieRecommendations, recommendations }, dispatch] = useStateValue();
 
     const flatListRef = React.useRef()
     const keyExtractor = useCallback((item) => item.id.toString(), []);
@@ -37,12 +37,7 @@ export default function Home({ navigation }) {
                         ref={flatListRef}
                         initialNumToRender={9}
                         numColumns={3}
-                        data={
-                            [
-                                ...movieRecommendations.filter(movie => !(movies.some(item => item.id === movie.id))),
-                                ...showRecommendations.filter(show => !(shows.some(item => item.id === show.id))),
-                            ].sort(CompareMatch).splice(0, Math.min(51, movieRecommendations.length + showRecommendations.length))
-                        }
+                        data={ recommendations }
                         keyExtractor={keyExtractor}
                         renderItem={ renderItem }
                         style={{ paddingTop: 10, width: '100%' }}
@@ -57,6 +52,9 @@ export default function Home({ navigation }) {
                 dispatch({
                     type: "SET_INSEARCH"
                 });
+                dispatch({
+                    type: "CLEAR_RECOMMENDATIONS"
+                })
                 navigation.goBack()
             }}/>
         </View>

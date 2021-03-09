@@ -1,5 +1,5 @@
 export const initialState = {
-    watched: [],
+    recommendations: [],
     user: null,
     searches: [],
     selected: null,
@@ -20,6 +20,16 @@ export const initialState = {
 
 export default function reducer(state, action) {
     switch(action.type) {
+        case 'CLEAR_RECOMMENDATIONS':
+            return {
+                ...state,
+                recommendations: []
+            }
+        case 'ADD_RECOMMENDATION':
+            return {
+                ...state,
+                recommendations: [ ...state.recommendations, action.item]
+            }
         case 'REVERSE_ORDER':
             return {
                 ...state,

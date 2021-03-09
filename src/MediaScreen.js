@@ -41,12 +41,6 @@ export default function MediaScreen({ navigation }) {
                         type: "ADD_MOVIE_REC",
                         item: {
                             id: item.id,
-                            name: item.name,
-                            title: item.title,
-                            poster_path: item.poster_path,
-                            overview: item.overview,
-                            vote_average: item.vote_average,
-                            release_date: item.release_date,
                             type: 'movie',
                             recBy: [selected.id]
                         }
@@ -87,12 +81,6 @@ export default function MediaScreen({ navigation }) {
                             type: "ADD_SHOW_REC",
                             item: {
                                 id: item.id,
-                                name: item.name,
-                                title: item.title,
-                                poster_path: item.poster_path,
-                                overview: item.overview,
-                                vote_average: item.vote_average,
-                                release_date: item.first_air_date,
                                 type: 'tv',
                                 recBy: [selected.id]
                             }
@@ -134,9 +122,7 @@ export default function MediaScreen({ navigation }) {
                     type: 'ADD_SHOW',
                     item: selected
                 });
-                recShowsById(selected.id).then((results) => {
-                    console.log(results)
-                })
+                recShowsById(selected.id)
                 navigation.goBack();
             }).catch(error => Alert.alert(error.message))
         }
