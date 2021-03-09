@@ -52,6 +52,7 @@ export default function Home({ navigation }) {
                 </SafeAreaView>
                 </MaskedView>
             </MaskedView>
+            <Text style={styles.titleText}>{"Recommendations"}</Text>
             <IconButton style={styles.backButton} icon="account" color={Colors.white} size={35} onPress={() => {
                 dispatch({
                     type: "SET_INSEARCH"
@@ -69,6 +70,12 @@ const styles = StyleSheet.create({
         width: "100%",
         justifyContent: "center",
         alignItems: "center"
+    },
+    titleText: {
+        position: 'absolute',
+        top: "7.5%",
+        color: 'white',
+        fontSize: 25
     },
     backButton: {
         position: "absolute",
@@ -105,7 +112,7 @@ const styles = StyleSheet.create({
         flex: 1, 
         width: "100%",
         alignItems: 'center',
-        marginBottom: 50
+        marginBottom: 0
     },
     contentContainerStyle: {
         width: '100%',
