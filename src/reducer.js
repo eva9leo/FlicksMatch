@@ -153,7 +153,9 @@ export default function reducer(state, action) {
             return {
                 ...state,
                 movies: [],
-                shows: []
+                shows: [],
+                movieRecommendations: [],
+                showRecommendations: [],
             }
         case "CLEAR_SEARCHES":
             return {
