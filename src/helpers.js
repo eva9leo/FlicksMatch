@@ -65,3 +65,12 @@ export function ReversedCompareDates(a, b) {
         return 0;
     }
 }
+
+export function CompareMatch(a, b) {
+    if (a.recBy.length < b.recBy.length) {
+        return 1
+    } else if (a.recBy.length > b.recBy.length) {
+        return -1
+    }
+    return 0
+}

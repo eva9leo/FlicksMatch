@@ -4,7 +4,7 @@ import { useStateValue } from './StateProvider'
 import { IconButton, Colors } from 'react-native-paper'
 import TransitionView from './components/TransitionView';
 import ResultBox from './components/ResultBox'
-import { CompareDates, ReversedCompareDates } from './helpers';
+import { CompareDates, ReversedCompareDates, CompareMatch } from './helpers';
 import { LinearGradient } from 'expo-linear-gradient'
 import MaskedView from '@react-native-masked-view/masked-view';
 
@@ -41,7 +41,7 @@ export default function Home({ navigation }) {
                             [
                                 ...movieRecommendations.filter(movie => !(movies.some(item => item.id === movie.id))),
                                 ...showRecommendations.filter(show => !(shows.some(item => item.id === show.id))),
-                            ]
+                            ].sort(CompareMatch).splice(0, Math.min(51, movieRecommendations.length + showRecommendations.length))
                         }
                         keyExtractor={keyExtractor}
                         renderItem={ renderItem }
