@@ -1,7 +1,8 @@
 import React, { PureComponent } from 'react';
-import { View, Text, StyleSheet, Alert, TouchableOpacity, Image } from "react-native";
+import { View, Text, StyleSheet, Alert, TouchableOpacity, Image, Dimensions } from "react-native";
 
 const imgUrl = "https://image.tmdb.org/t/p/w185";
+const screenWidth = Dimensions.get('screen').width;
 
 class ResultBox extends PureComponent {
   render() {
@@ -51,7 +52,7 @@ const styles = StyleSheet.create({
   },
   resultContainer: {
       height: 185, 
-      width: 120, 
+      width: (screenWidth / 3) - 5, 
       flex: 1,
       justifyContent: 'center'
   },

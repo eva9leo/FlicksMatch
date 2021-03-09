@@ -145,7 +145,7 @@ export default function Profile({ navigation }) {
                 alignContent: 'center',
                 position: 'absolute',
                 top: 60, 
-                height: 20}}
+                height: 25}}
             >
                 <Text style={styles.titleText}>{"Watched List"}</Text>
                 <IconButton
@@ -251,20 +251,25 @@ const styles = StyleSheet.create({
         marginTop: 60,
         flex: 1, 
         width: "100%",
-        alignItems: 'center'
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     fadeContainer: {
         flex: 1, 
         width: "100%",
-        alignItems: 'center'
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     maskContainerBottom: {
         flex: 1, 
         width: "100%",
         alignItems: 'center',
+        justifyContent: 'center',
         marginBottom: 50
     },
     contentContainerStyle: {
+        flex: 0,
+        alignContent: 'center',
         width: '100%',
         paddingTop: 15,
         paddingBottom: 50

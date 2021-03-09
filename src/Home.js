@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     },
     titleText: {
         position: 'absolute',
-        top: "7.5%",
+        top: 57,
         color: 'white',
         fontSize: 25
     },
