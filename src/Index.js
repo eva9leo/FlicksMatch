@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect, useContext } from 'react';
-import { StyleSheet, Alert } from 'react-native';
+import { StyleSheet, Alert, Dimensions } from 'react-native';
 import Login from "./Login";
 import Start from "./Start";
 import Register from "./Register";

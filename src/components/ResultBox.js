@@ -1,8 +1,9 @@
 import React, { PureComponent } from 'react';
-import { View, Text, StyleSheet, Alert, TouchableOpacity, Image, Dimensions } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Image, Dimensions } from "react-native";
 
 const imgUrl = "https://image.tmdb.org/t/p/w185";
 const screenWidth = Dimensions.get('screen').width;
+const screenHeight = Dimensions.get('screen').height;
 
 class ResultBox extends PureComponent {
   render() {
@@ -22,7 +23,7 @@ class ResultBox extends PureComponent {
               {this.props.item.poster_path ? (
                 <Image 
                     source={{uri: imgUrl + this.props.item.poster_path}} 
-                    style={{ height: 180, width: "100%", resizeMode: "contain"}}
+                    style={{ height: screenHeight / 4.63, width: "100%", resizeMode: "contain"}}
                 />
               ) : (
                 
@@ -51,7 +52,7 @@ const styles = StyleSheet.create({
       alignItems: "center"
   },
   resultContainer: {
-      height: 185, 
+      height: screenHeight / 4.63, 
       width: (screenWidth / 3) - 5, 
       flex: 1,
       justifyContent: 'center'
