@@ -10,6 +10,7 @@ import TransitionView from './components/TransitionView';
 import TransitionScreen from './components/TransitionScreen'
 import { TMDB_KEY } from "@env";
 import { CompareDates, ReversedCompareDates, CompareMatch } from './helpers';
+import { Flow } from 'react-native-animated-spinkit'
 
 export default function Profile({ navigation }) {
     const flatListRef = React.useRef()
@@ -188,8 +189,8 @@ export default function Profile({ navigation }) {
             ) : (
                 <>
                     <View style={styles.logoContainer}>
-                        <Image style={styles.logo} source={require("../assets/logo.png")}/>
-                        <Text style={styles.title}>{"Loading..."}</Text>
+                        <Text style={styles.title}>{"Loading"}</Text>
+                        <Flow color={'white'} size={35}/>
                     </View>
                 </>
             )}
@@ -215,8 +216,10 @@ const styles = StyleSheet.create({
         justifyContent: "center"
     },
     title: {
-        fontSize: 20,
-        fontWeight: "bold"
+        fontSize: 30,
+        fontWeight: "bold",
+        paddingBottom: 10,
+        color: 'white'
     },
     buttonContainer: {
         elevation: 8,
