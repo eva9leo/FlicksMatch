@@ -18,11 +18,17 @@ export default function RegisterForm() {
                     db.collection('users').doc(result.user.uid).set({
                         firstName: firstName,
                         lastName: lastName,
-                        movies: {},
-                        shows: {},
-                        showRecs: {},
-                        movieRecs: {},
-                    });
+                    }).then(() => {
+                        db.collection('watched').doc(result.user.uid).set({
+                            movies: {},
+                            shows: {},
+                    }).then(() => {
+                        db.collection('recs').doc(result.user.uid).set({
+                            showRecs: {},
+                            movieRecs: {},
+                        })
+                    })
+                    })
                 }
             }).catch(error => Alert.alert(error.message))
     }

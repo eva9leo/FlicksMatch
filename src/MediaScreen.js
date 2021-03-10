@@ -26,7 +26,7 @@ export default function MediaScreen({ navigation }) {
                 })
                 const newRec = {}
                 newRec['movieRecs.' + item.id] = [ ...movieRecommendations[curRecIndex].recBy, selected.id]
-                db.collection('users').doc(user.uid).update(newRec).then(() => {
+                db.collection('recs').doc(user.uid).update(newRec).then(() => {
                     dispatch({
                         type: "UPDATE_MOVIE_REC",
                         item: [item.id, selected.id]
@@ -36,7 +36,7 @@ export default function MediaScreen({ navigation }) {
                 // this is a new recommendation
                 const newRec = {}
                 newRec['movieRecs.' + item.id] = [selected.id]
-                db.collection('users').doc(user.uid).update(newRec).then(() => {
+                db.collection('recs').doc(user.uid).update(newRec).then(() => {
                     dispatch({
                         type: "ADD_MOVIE_REC",
                         item: {
@@ -66,7 +66,7 @@ export default function MediaScreen({ navigation }) {
                     })
                     const newRec = {}
                     newRec['showRecs.' + item.id] = [ ...showRecommendations[curRecIndex].recBy, selected.id]
-                    db.collection('users').doc(user.uid).update(newRec).then(() => {
+                    db.collection('recs').doc(user.uid).update(newRec).then(() => {
                         dispatch({
                             type: "UPDATE_SHOW_REC",
                             item: [item.id, selected.id]
@@ -76,7 +76,7 @@ export default function MediaScreen({ navigation }) {
                     // this is a new recommendation
                     const newRec = {}
                     newRec['showRecs.' + item.id] = [selected.id]
-                    db.collection('users').doc(user.uid).update(newRec).then(() => {
+                    db.collection('recs').doc(user.uid).update(newRec).then(() => {
                         dispatch({
                             type: "ADD_SHOW_REC",
                             item: {
@@ -106,7 +106,7 @@ export default function MediaScreen({ navigation }) {
                 type: 'movie'
             }
             newMedia['movies.' + selected.id] = mediaDetails 
-            db.collection('users').doc(user.uid).update(newMedia)
+            db.collection('watched').doc(user.uid).update(newMedia)
             .then(() => {
                 dispatch({
                     type: 'ADD_MOVIE',
@@ -142,7 +142,7 @@ export default function MediaScreen({ navigation }) {
                 type: 'tv'
             }
             newMedia['shows.' + selected.id] = mediaDetails 
-            db.collection('users').doc(user.uid).update(newMedia).
+            db.collection('watched').doc(user.uid).update(newMedia).
             then(() => {
                 dispatch({
                     type: 'ADD_SHOW',
@@ -166,7 +166,7 @@ export default function MediaScreen({ navigation }) {
         e.preventDefault();
         const newMedia = {}
         newMedia['shows.' + selected.id] = firebase.firestore.FieldValue.delete()
-        db.collection('users').doc(user.uid).update(newMedia)
+        db.collection('watched').doc(user.uid).update(newMedia)
         .then(() => {
             dispatch({
                 type: "REMOVE_SHOW",
@@ -180,7 +180,7 @@ export default function MediaScreen({ navigation }) {
                     // when the recommended show should be removed
                     const newRec = {}
                     newRec['showRecs.' + rec.id] = firebase.firestore.FieldValue.delete()
-                    db.collection('users').doc(user.uid).update(newRec)
+                    db.collection('recs').doc(user.uid).update(newRec)
                     .then(() => {
                         dispatch({
                             type: "DELETE_SHOW_REC",
@@ -197,7 +197,7 @@ export default function MediaScreen({ navigation }) {
                         rec.recBy.splice(curIndex, 1)
                     }
                     newRec['showRecs.' + rec.id] = rec.recBy
-                    db.collection('users').doc(user.uid).update(newRec).then(
+                    db.collection('recs').doc(user.uid).update(newRec).then(
                         dispatch({
                             type: "REMOVE_SHOW_REC",
                             item: [rec.id, selected.id]
@@ -213,7 +213,7 @@ export default function MediaScreen({ navigation }) {
         e.preventDefault();
         const newMedia = {}
         newMedia['movies.' + selected.id] = firebase.firestore.FieldValue.delete()
-        db.collection('users').doc(user.uid).update(newMedia).then(() => {
+        db.collection('watched').doc(user.uid).update(newMedia).then(() => {
             dispatch({
                 type: "REMOVE_MOVIE",
                 id: selected.id
@@ -226,7 +226,7 @@ export default function MediaScreen({ navigation }) {
                     // when the recommended movie should be removed
                     const newRec = {}
                     newRec['movieRecs.' + rec.id] = firebase.firestore.FieldValue.delete()
-                    db.collection('users').doc(user.uid).update(newRec)
+                    db.collection('recs').doc(user.uid).update(newRec)
                     .then(() => {
                         dispatch({
                             type: "DELETE_MOVIE_REC",
@@ -243,7 +243,7 @@ export default function MediaScreen({ navigation }) {
                         rec.recBy.splice(curIndex, 1)
                     }
                     newRec['movieRecs.' + rec.id] = rec.recBy
-                    db.collection('users').doc(user.uid).update(newRec).then(
+                    db.collection('recs').doc(user.uid).update(newRec).then(
                         dispatch({
                             type: "REMOVE_MOVIE_REC",
                             item: [rec.id, selected.id]

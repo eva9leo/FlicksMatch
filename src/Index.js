@@ -44,7 +44,7 @@ export default function Index() {
 
   useEffect(() => {
     if (user) { // when user is logged in
-      db.collection('users').doc(user.uid).get().then((doc) => {
+      db.collection('watched').doc(user.uid).get().then((doc) => {  // get user watched list
         if (doc) {
           dispatch({ type: 'SET_READY' })
           const userData = doc.data();
@@ -77,29 +77,34 @@ export default function Index() {
               }
             })
           }
-
-          for (const rec in userData.movieRecs) {
-            dispatch({
-              type: "ADD_MOVIE_REC",
-              item: {
-                id: rec,
-                type: 'movie',
-                recBy: userData.movieRecs[rec.toString()]
-              }
-            })
-          }
-          for (const rec in userData.showRecs) {
-            dispatch({
-              type: "ADD_SHOW_REC",
-              item: {
-                id: rec,
-                type: 'tv',
-                recBy: userData.showRecs[rec.toString()]
-              }
-            })
-            // searchShowById(rec, userData.showRecs[rec.toString()])
-          }
         }
+      }).then(() => {
+        // get recommendation list
+        db.collection('recs').doc(user.uid).get().then((doc) => {
+          if (doc) {
+            const userData = doc.data()
+            for (const rec in userData.movieRecs) {
+              dispatch({
+                type: "ADD_MOVIE_REC",
+                item: {
+                  id: rec,
+                  type: 'movie',
+                  recBy: userData.movieRecs[rec.toString()]
+                }
+              })
+            }
+            for (const rec in userData.showRecs) {
+              dispatch({
+                type: "ADD_SHOW_REC",
+                item: {
+                  id: rec,
+                  type: 'tv',
+                  recBy: userData.showRecs[rec.toString()]
+                }
+              })
+            }
+          }
+        })
       })
       .catch((error) => {
         console.log("Error getting document", error)
