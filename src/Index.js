@@ -134,7 +134,7 @@ export default function Index() {
   return (
       <NavigationContainer>
         <Stack.Navigator screenOptions={{headerShown: false, gestureEnabled: false}}>
-          {ready ? (
+          {user ? (
             <>
               <Stack.Screen name="Profile" component={Profile} />
               <Stack.Screen name="Home" component={Home} />

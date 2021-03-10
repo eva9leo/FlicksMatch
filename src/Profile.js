@@ -1,5 +1,5 @@
-import React, { useCallback, useState } from 'react'
-import { View, Text, Button, StyleSheet, Alert, TouchableOpacity, SafeAreaView, FlatList } from "react-native"
+import React, { useCallback } from 'react'
+import { View, Text, Image, StyleSheet, TouchableOpacity, SafeAreaView, FlatList } from "react-native"
 import { auth } from "./firebaseConfig"
 import { useStateValue } from './StateProvider'
 import { IconButton, Colors } from 'react-native-paper'
@@ -7,12 +7,13 @@ import ResultBox from './components/ResultBox'
 import { LinearGradient } from 'expo-linear-gradient'
 import MaskedView from '@react-native-masked-view/masked-view';
 import TransitionView from './components/TransitionView';
+import TransitionScreen from './components/TransitionScreen'
 import { TMDB_KEY } from "@env";
 import { CompareDates, ReversedCompareDates, CompareMatch } from './helpers';
 
 export default function Profile({ navigation }) {
     const flatListRef = React.useRef()
-    const [{ user, firstname, lastname, unsubscribe, shows, movies, reverseOrder, showRecommendations, movieRecommendations }, dispatch] = useStateValue();
+    const [{ user, firstname, lastname, unsubscribe, shows, movies, reverseOrder, showRecommendations, movieRecommendations, ready }, dispatch] = useStateValue();
 
     // const [scrollHeight, setScrollHeight] = useState(0);
     // const [contentHeight, setContentHeight] = useState(0);
@@ -82,9 +83,12 @@ export default function Profile({ navigation }) {
     const logout = () => {
         if (user) {
             // unsubscribe();
-            dispatch({type: 'SET_READY'})
-            dispatch({type: 'CLEAR_CONTENT'})
-            auth.signOut()
+            auth.signOut().then(() => {
+                setTimeout(function(){
+                    dispatch({type: 'CLEAR_CONTENT'})
+                    dispatch({type: 'SET_READY'})
+                }, 500)
+            })
         }
     }
 
@@ -99,90 +103,96 @@ export default function Profile({ navigation }) {
     
     return (
         <View style={styles.container}>
-            {/* <Text>{"Hello, " + firstname + " " + lastname }</Text> */}
-            {/* <Text>{"Movies: " + movies}</Text>
-            <Text>{"TV shows: " + shows}</Text> */}
-            <MaskedView 
-                style={styles.maskContainerTop}
-                maskElement={ <LinearGradient style={styles.fadeContainer} colors={['transparent', 'black'] } locations={[0.055, 0.075]} /> }
-            >
-                <MaskedView 
-                style={styles.maskContainerBottom}
-                maskElement={ <LinearGradient style={styles.fadeContainer} colors={['black', 'transparent'] } locations={[0.93, 0.95]} /> }
-                >
-                <SafeAreaView style={styles.resultsContainer}>
-                    <FlatList 
-                        style={{}}
-                        ref={flatListRef}
-                        initialNumToRender={9}
-                        numColumns={3}
-                        data={
-                            reverseOrder ? [...movies, ...shows].sort(ReversedCompareDates) : [...movies, ...shows].sort(CompareDates)
+            {ready ? (
+                <TransitionScreen>
+                    <MaskedView 
+                        style={styles.maskContainerTop}
+                        maskElement={ <LinearGradient style={styles.fadeContainer} colors={['transparent', 'black'] } locations={[0.055, 0.075]} /> }
+                    >
+                        <MaskedView 
+                        style={styles.maskContainerBottom}
+                        maskElement={ <LinearGradient style={styles.fadeContainer} colors={['black', 'transparent'] } locations={[0.93, 0.95]} /> }
+                        >
+                        <SafeAreaView style={styles.resultsContainer}>
+                            <FlatList 
+                                style={{}}
+                                ref={flatListRef}
+                                initialNumToRender={9}
+                                numColumns={3}
+                                data={
+                                    reverseOrder ? [...movies, ...shows].sort(ReversedCompareDates) : [...movies, ...shows].sort(CompareDates)
+                                }
+                                keyExtractor={keyExtractor}
+                                renderItem={ renderItem }
+                                style={{ paddingTop: 10, width: '100%' }}
+                                contentContainerStyle={styles.contentContainerStyle}
+                                showsVerticalScrollIndicator={false}
+                                // onLayout={(event) => {
+                                //     var {x, y, width, height} = event.nativeEvent.layout;
+                                //     setScrollHeight(height)
+                                // }}
+                                // onContentSizeChange={onContentHeightChange}
+                                // scrollEnabled = { contentHeight > scrollHeight }
+                            />
+                        </SafeAreaView>
+                        </MaskedView>
+                    </MaskedView>
+                    <View style={{
+                        flex: 0,
+                        flexDirection: 'row',
+                        width: '70%', 
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        alignContent: 'center',
+                        position: 'absolute',
+                        top: 60, 
+                        height: 25}}
+                    >
+                        <Text style={styles.titleText}>{"Watched List"}</Text>
+                        <IconButton
+                            style={{ paddingTop: 5 }}
+                            icon="tune" 
+                            color={Colors.white} 
+                            size={27} 
+                            onPress={() => {
+                                // Alert.alert('Filter place holder')
+                                dispatch({type:'REVERSE_ORDER'})
+                                flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
+                            }}
+                        />
+                    </View>
+                    <IconButton style={styles.addButton} icon="plus" color={Colors.white} size={35} onPress={() => 
+                        {
+                            dispatch({
+                                type: "CLEAR_SEARCHES"
+                            });
+                            dispatch({
+                                type: "SET_INSEARCH"
+                            });
+                            navigation.navigate("SearchContents");
                         }
-                        keyExtractor={keyExtractor}
-                        renderItem={ renderItem }
-                        style={{ paddingTop: 10, width: '100%' }}
-                        contentContainerStyle={styles.contentContainerStyle}
-                        showsVerticalScrollIndicator={false}
-                        // onLayout={(event) => {
-                        //     var {x, y, width, height} = event.nativeEvent.layout;
-                        //     setScrollHeight(height)
-                        // }}
-                        // onContentSizeChange={onContentHeightChange}
-                        // scrollEnabled = { contentHeight > scrollHeight }
-                    />
-                </SafeAreaView>
-                </MaskedView>
-            </MaskedView>
-            <View style={{
-                flex: 0,
-                flexDirection: 'row',
-                width: '70%', 
-                justifyContent: 'center',
-                alignItems: 'center',
-                alignContent: 'center',
-                position: 'absolute',
-                top: 60, 
-                height: 25}}
-            >
-                <Text style={styles.titleText}>{"Watched List"}</Text>
-                <IconButton
-                    style={{ paddingTop: 5 }}
-                    icon="tune" 
-                    color={Colors.white} 
-                    size={27} 
-                    onPress={() => {
-                        // Alert.alert('Filter place holder')
-                        dispatch({type:'REVERSE_ORDER'})
-                        flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
-                    }}
-                />
-            </View>
-            
-            
-            <IconButton style={styles.addButton} icon="plus" color={Colors.white} size={35} onPress={() => 
-                {
-                    dispatch({
-                        type: "CLEAR_SEARCHES"
-                    });
-                    dispatch({
-                        type: "SET_INSEARCH"
-                    });
-                    navigation.navigate("SearchContents");
-                }
-                }/>
-            <IconButton style={styles.homeButton} icon="home" color={Colors.white} size={35} onPress={() => {
-                fillRecommendations();
-                dispatch({
-                    type: "SET_INSEARCH"
-                });
-                navigation.navigate("Home")
-            }}/>
-            <View style={styles.logoutButtonContainer}>
-                <TouchableOpacity style={styles.buttonContainer} onPress={logout}>
-                    <Text style={styles.buttonText}>Log Out</Text>
-                </TouchableOpacity>
-            </View>
+                        }/>
+                    <IconButton style={styles.homeButton} icon="home" color={Colors.white} size={35} onPress={() => {
+                        fillRecommendations();
+                        dispatch({
+                            type: "SET_INSEARCH"
+                        });
+                        navigation.navigate("Home")
+                    }}/>
+                    <View style={styles.logoutButtonContainer}>
+                        <TouchableOpacity style={styles.buttonContainer} onPress={logout}>
+                            <Text style={styles.buttonText}>Log Out</Text>
+                        </TouchableOpacity>
+                    </View>
+                </TransitionScreen>
+            ) : (
+                <>
+                    <View style={styles.logoContainer}>
+                        <Image style={styles.logo} source={require("../assets/logo.png")}/>
+                        <Text style={styles.title}>{"Loading..."}</Text>
+                    </View>
+                </>
+            )}
         </View>
     )
 }
@@ -194,6 +204,19 @@ const styles = StyleSheet.create({
         width: "100%",
         justifyContent: "center",
         alignItems: "center"
+    },
+    logo: {
+        height: 80,
+        width: 80
+    },
+    logoContainer: {
+        alignItems: "center",
+        flexGrow: 1,
+        justifyContent: "center"
+    },
+    title: {
+        fontSize: 20,
+        fontWeight: "bold"
     },
     buttonContainer: {
         elevation: 8,
