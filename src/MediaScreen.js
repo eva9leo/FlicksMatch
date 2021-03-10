@@ -147,7 +147,7 @@ export default function MediaScreen({ navigation }) {
                 dispatch({
                     type: 'ADD_SHOW',
                     item: {
-                        selected: selected.id,
+                        id: selected.id,
                         name: selected.name? selected.name : null,
                         title: selected.title ? selected.title : null,
                         poster_path: selected.poster_path ? selected.poster_path : null,
