@@ -96,9 +96,18 @@ export default function MediaScreen({ navigation }) {
             Alert.alert('This is already in your watched list');
         } else {
             e.preventDefault();
-            db.collection('users').doc(user.uid).update({
-                movies: firebase.firestore.FieldValue.arrayUnion(selected.id.toString())
-            }).then(() => {
+            const newMedia = {}
+            const mediaDetails = {
+                name: selected.name? selected.name : null,
+                title: selected.title ? selected.title : null,
+                poster_path: selected.poster_path ? selected.poster_path : null,
+                vote_average: selected.vote_average,
+                release_date: selected.release_date ? selected.release_date : null,
+                type: 'movie'
+            }
+            newMedia['movies.' + selected.id] = mediaDetails 
+            db.collection('users').doc(user.uid).update(newMedia)
+            .then(() => {
                 dispatch({
                     type: 'ADD_MOVIE',
                     item: selected
@@ -115,9 +124,18 @@ export default function MediaScreen({ navigation }) {
             Alert.alert('This is already in your watched list');
         } else {
             e.preventDefault();
-            db.collection('users').doc(user.uid).update({
-                shows: firebase.firestore.FieldValue.arrayUnion(selected.id.toString())
-            }).then(() => {
+            const newMedia = {}
+            const mediaDetails = {
+                name: selected.name? selected.name : null,
+                title: selected.title ? selected.title : null,
+                poster_path: selected.poster_path ? selected.poster_path : null,
+                vote_average: selected.vote_average,
+                release_date: selected.release_date ? selected.release_date : null,
+                type: 'tv'
+            }
+            newMedia['shows.' + selected.id] = mediaDetails 
+            db.collection('users').doc(user.uid).update(newMedia).
+            then(() => {
                 dispatch({
                     type: 'ADD_SHOW',
                     item: selected
@@ -130,9 +148,10 @@ export default function MediaScreen({ navigation }) {
 
     const removeTv = e => {
         e.preventDefault();
-        db.collection('users').doc(user.uid).update({
-            shows: firebase.firestore.FieldValue.arrayRemove(selected.id.toString())
-        }).then(() => {
+        const newMedia = {}
+        newMedia['shows.' + selected.id] = firebase.firestore.FieldValue.delete()
+        db.collection('users').doc(user.uid).update(newMedia)
+        .then(() => {
             dispatch({
                 type: "REMOVE_SHOW",
                 id: selected.id
@@ -176,9 +195,9 @@ export default function MediaScreen({ navigation }) {
 
     const removeMovie = e => {
         e.preventDefault();
-        db.collection('users').doc(user.uid).update({
-            movies: firebase.firestore.FieldValue.arrayRemove(selected.id.toString())
-        }).then(() => {
+        const newMedia = {}
+        newMedia['movies.' + selected.id] = firebase.firestore.FieldValue.delete()
+        db.collection('users').doc(user.uid).update(newMedia).then(() => {
             dispatch({
                 type: "REMOVE_MOVIE",
                 id: selected.id

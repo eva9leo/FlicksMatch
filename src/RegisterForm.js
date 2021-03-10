@@ -18,8 +18,8 @@ export default function RegisterForm() {
                     db.collection('users').doc(result.user.uid).set({
                         firstName: firstName,
                         lastName: lastName,
-                        movies: [],
-                        shows: [],
+                        movies: {},
+                        shows: {},
                         showRecs: {},
                         movieRecs: {},
                     });

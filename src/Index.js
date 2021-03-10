@@ -150,15 +150,46 @@ export default function Index() {
       db.collection('users').doc(user.uid).get().then((doc) => {
         if (doc) {
           const userData = doc.data();
-          userData.movies.forEach(function(movie) {
-            searchMovieById(movie)
-          })
-          userData.shows.forEach(function(show) {
-            searchShowById(show)
-          })
-          setTimeout(function(){
-            dispatch({ type: 'SET_READY' })
-          }, 100)
+          for (const movie in userData.movies) {
+            dispatch({
+              type: 'ADD_MOVIE',
+              item: {
+                id: parseInt(movie),
+                type: 'movie',
+                name: userData.movies[movie]['name'],
+                title: userData.movies[movie]['title'],
+                poster_path: userData.movies[movie]['poster_path'],
+                vote_average: userData.movies[movie]['vote_average'],
+                release_date: userData.movies[movie]['release_date'],
+              }
+            })
+          }
+
+          for (const show in userData.shows) {
+            dispatch({
+              type: 'ADD_SHOW',
+              item: {
+                id: parseInt(show),
+                type: 'tv',
+                name: userData.shows[show]['name'],
+                title: userData.shows[show]['title'],
+                poster_path: userData.shows[show]['poster_path'],
+                vote_average: userData.shows[show]['vote_average'],
+                release_date: userData.shows[show]['release_date'],
+              }
+            })
+          }
+
+          // userData.movies.forEach(function(movie) {
+          //   searchMovieById(movie)
+          // })
+          // userData.shows.forEach(function(show) {
+          //   searchShowById(show)
+          // })
+          // setTimeout(function(){
+            
+          // }, 100)
+          dispatch({ type: 'SET_READY' })
           for (const rec in userData.movieRecs) {
             dispatch({
               type: "ADD_MOVIE_REC",
