@@ -17,109 +17,6 @@ import SearchContents from "./SearchContents"
 export default function Index() {
   const Stack = createStackNavigator();
   const [{ user, shows, movies, ready }, dispatch] = useStateValue();
-
-  // const recMoviesById = async (movieId) => {
-  //   fetch(
-  //     "https://api.themoviedb.org/3/movie/" +
-  //     movieId + "/recommendations?api_key=" +
-  //     TMDB_KEY + "&language=en-US&page=1"
-  //   ).then((response) => response.json())
-  //   .then((json) => {
-  //     console.log(json)
-  //   }).catch((error) => {Alert.alert(error)})
-  // }
-
-  // const recShowsById = async (showId) => {
-  //   fetch(
-  //     "https://api.themoviedb.org/3/tv/" +
-  //     showId + "/recommendations?api_key=" +
-  //     TMDB_KEY + "&language=en-US&page=1"
-  //   ).then((response) => response.json())
-  //   .then((json) => {
-  //     console.log(json)
-  //   }).catch((error) => {Alert.alert(error)})
-  // }
-  const searchMovieById = async (movieId, rec=null) => {
-    fetch(
-      "https://api.themoviedb.org/3/movie/" +
-      movieId + "?api_key=" +
-      TMDB_KEY +
-      "&language=en-US"
-    ).then((response) => response.json())
-    .then((item) => {
-      if (rec) {
-        dispatch({
-          type: "ADD_RECOMMENDATION",
-          item: {
-            id: item.id,
-            name: item.name,
-            title: item.title,
-            poster_path: item.poster_path,
-            overview: item.overview,
-            vote_average: item.vote_average,
-            release_date: item.release_date,
-            type: 'movie',
-            recBy: rec
-          }
-        });
-      } else {
-        dispatch({
-          type: "ADD_MOVIE",
-          item: {
-            id: item.id,
-            name: item.name,
-            title: item.title,
-            poster_path: item.poster_path,
-            overview: item.overview,
-            vote_average: item.vote_average,
-            release_date: item.release_date,
-            type: 'movie'
-          }
-        });
-      }
-    })
-  }
-
-  const searchShowById = async (showId, rec=null) => {
-    fetch(
-      "https://api.themoviedb.org/3/tv/" +
-      showId + "?api_key=" +
-      TMDB_KEY +
-      "&language=en-US"
-    ).then((response) => response.json())
-    .then((item) => {
-      if (rec) {
-        dispatch({
-          type: "ADD_RECOMMENDATION",
-          item: {
-            id: item.id,
-            name: item.name,
-            title: item.title,
-            poster_path: item.poster_path,
-            overview: item.overview,
-            vote_average: item.vote_average,
-            release_date: item.first_air_date,
-            type: 'tv',
-            recBy: rec
-          }
-        });
-      } else {
-        dispatch({
-          type: "ADD_SHOW",
-          item: {
-            id: item.id,
-            name: item.name,
-            title: item.title,
-            poster_path: item.poster_path,
-            overview: item.overview,
-            vote_average: item.vote_average,
-            release_date: item.first_air_date,
-            type: 'tv'
-          }
-        });
-      }
-    })
-  }
   
   useEffect(() => {
     auth.onAuthStateChanged(authUser => {
@@ -149,6 +46,7 @@ export default function Index() {
     if (user) { // when user is logged in
       db.collection('users').doc(user.uid).get().then((doc) => {
         if (doc) {
+          dispatch({ type: 'SET_READY' })
           const userData = doc.data();
           for (const movie in userData.movies) {
             dispatch({
@@ -180,16 +78,6 @@ export default function Index() {
             })
           }
 
-          // userData.movies.forEach(function(movie) {
-          //   searchMovieById(movie)
-          // })
-          // userData.shows.forEach(function(show) {
-          //   searchShowById(show)
-          // })
-          // setTimeout(function(){
-            
-          // }, 100)
-          dispatch({ type: 'SET_READY' })
           for (const rec in userData.movieRecs) {
             dispatch({
               type: "ADD_MOVIE_REC",
@@ -199,8 +87,6 @@ export default function Index() {
                 recBy: userData.movieRecs[rec.toString()]
               }
             })
-            // searchMovieById(rec, userData.movieRecs[rec.toString()])
-            // console.log(rec + ': ' + Array.isArray(userData.movieRecs[rec.toString()]))
           }
           for (const rec in userData.showRecs) {
             dispatch({

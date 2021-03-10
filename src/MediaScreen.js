@@ -110,7 +110,15 @@ export default function MediaScreen({ navigation }) {
             .then(() => {
                 dispatch({
                     type: 'ADD_MOVIE',
-                    item: selected
+                    item: {
+                        id: selected.id,
+                        name: selected.name? selected.name : null,
+                        title: selected.title ? selected.title : null,
+                        poster_path: selected.poster_path ? selected.poster_path : null,
+                        vote_average: selected.vote_average,
+                        release_date: selected.release_date ? selected.release_date : null,
+                        type: 'movie'
+                    }
                 });
                 recMoviesById(selected.id)
                 navigation.goBack();
@@ -138,7 +146,15 @@ export default function MediaScreen({ navigation }) {
             then(() => {
                 dispatch({
                     type: 'ADD_SHOW',
-                    item: selected
+                    item: {
+                        selected: selected.id,
+                        name: selected.name? selected.name : null,
+                        title: selected.title ? selected.title : null,
+                        poster_path: selected.poster_path ? selected.poster_path : null,
+                        vote_average: selected.vote_average,
+                        release_date: selected.release_date ? selected.release_date : null,
+                        type: 'tv'
+                    }
                 });
                 recShowsById(selected.id)
                 navigation.goBack();

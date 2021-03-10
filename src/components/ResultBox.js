@@ -1,21 +1,75 @@
 import React, { PureComponent } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, Dimensions } from "react-native";
+import { TMDB_KEY } from "@env"
 
 const imgUrl = "https://image.tmdb.org/t/p/w185";
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
 
+const searchMovieById = async (movieId) => {
+  return await fetch(
+    "https://api.themoviedb.org/3/movie/" +
+    movieId + "?api_key=" +
+    TMDB_KEY +
+    "&language=en-US"
+  ).then((response) => response.json())
+  .then((item) => {
+    return item;
+    
+  })
+}
+
+const searchShowById = async (showId) => {
+  return await fetch(
+    "https://api.themoviedb.org/3/tv/" +
+    showId + "?api_key=" +
+    TMDB_KEY +
+    "&language=en-US"
+  ).then((response) => response.json())
+  .then((item) => {
+    return item;
+  })
+}
+
 class ResultBox extends PureComponent {
   render() {
     return (
       <TouchableOpacity 
-          onPress={() => {
+          onPress={async () => {
+            let item = null
+            if (this.props.item.type === 'movie') {
+              item = await searchMovieById(this.props.item.id)
               this.props.dispatch({
-                  type: "SET_SELECTED",
-                  item: this.props.item
-              })
-              this.props.navigation.navigate("MediaScreen");
-            }} 
+                type: "SET_SELECTED",
+                item: {
+                  id: item.id,
+                  name: item.name,
+                  title: item.title,
+                  poster_path: item.poster_path,
+                  overview: item.overview,
+                  vote_average: item.vote_average,
+                  release_date: item.release_date,
+                  type: 'movie',
+                }
+              });
+            } else {
+              item = await searchShowById(this.props.item.id)
+              this.props.dispatch({
+                type: "SET_SELECTED",
+                item: {
+                  id: item.id,
+                  name: item.name,
+                  title: item.title,
+                  poster_path: item.poster_path,
+                  overview: item.overview,
+                  vote_average: item.vote_average,
+                  release_date: item.first_air_date,
+                  type: 'tv',
+                }
+              });
+            }
+            this.props.navigation.navigate("MediaScreen");
+          }} 
           activeOpacity={1}
           style={{padding: 2}}
       >
