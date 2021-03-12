@@ -2,8 +2,8 @@ export function CompareDates(a, b) {
     if (a.release_date && b.release_date) 
     {
         // both a and b has release_dates
-        const a_date = new Date(a.release_date)
-        const b_date = new Date(b.release_date)
+        const a_date = a.release_date
+        const b_date = b.release_date
 
         if (a_date < b_date) { 
             return 1; 
