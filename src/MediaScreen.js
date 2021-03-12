@@ -30,42 +30,14 @@ export default function MediaScreen({ navigation }) {
                     // recommendation is new
                     const mediaDetails = {
                         title: item.title ? item.title : item.name,
-                        poster_path: selected.poster_path ? selected.poster_path : null,
-                        vote_average: selected.vote_average,
-                        release_date: selected.release_date ? new Date(selected.release_date) : null,
+                        poster_path: item.poster_path ? item.poster_path : null,
+                        vote_average: item.vote_average,
+                        release_date: item.release_date ? new Date(item.release_date) : null,
                         recBy: [selected.id.toString()]
                     }
                     movieRef.set(mediaDetails)
                 }
             })
-            // if (movieRecommendations.some(movie => movie.id === item.id)) {
-            //     // this recommendation already exist
-            //     const curRecIndex = movieRecommendations.findIndex(function(rec) {
-            //         return rec.id === item.id
-            //     })
-            //     const newRec = {}
-            //     newRec['movieRecs.' + item.id] = [ ...movieRecommendations[curRecIndex].recBy, selected.id]
-            //     db.collection('recs').doc(user.uid).update(newRec).then(() => {
-            //         dispatch({
-            //             type: "UPDATE_MOVIE_REC",
-            //             item: [item.id, selected.id]
-            //         })
-            //     })
-            // } else {
-            //     // this is a new recommendation
-            //     const newRec = {}
-            //     newRec['movieRecs.' + item.id] = [selected.id]
-            //     db.collection('recs').doc(user.uid).update(newRec).then(() => {
-            //         dispatch({
-            //             type: "ADD_MOVIE_REC",
-            //             item: {
-            //                 id: item.id,
-            //                 type: 'movie',
-            //                 recBy: [selected.id]
-            //             }
-            //         })
-            //     })
-            // }
         })
       }).catch((error) => {Alert.alert(error)})
     }
@@ -78,34 +50,25 @@ export default function MediaScreen({ navigation }) {
         ).then((response) => response.json())
         .then((json) => {
             json.results.forEach(function(item){
-                if (showRecommendations.some(show => show.id === item.id)) {
-                    // this recommendation already exist
-                    const curRecIndex = showRecommendations.findIndex(function(rec) {
-                        return rec.id === item.id
-                    })
-                    const newRec = {}
-                    newRec['showRecs.' + item.id] = [ ...showRecommendations[curRecIndex].recBy, selected.id]
-                    db.collection('recs').doc(user.uid).update(newRec).then(() => {
-                        dispatch({
-                            type: "UPDATE_SHOW_REC",
-                            item: [item.id, selected.id]
+                const showRef = db.collection('users').doc(user.uid).collection('showRecs').doc(item.id.toString())
+                showRef.get().then((doc) => {
+                    if (doc.exists) {
+                        // recommendation already exist
+                        showRef.update({
+                            recBy: firebase.firestore.FieldValue.arrayUnion(selected.id.toString())
                         })
-                    })
-                } else {
-                    // this is a new recommendation
-                    const newRec = {}
-                    newRec['showRecs.' + item.id] = [selected.id]
-                    db.collection('recs').doc(user.uid).update(newRec).then(() => {
-                        dispatch({
-                            type: "ADD_SHOW_REC",
-                            item: {
-                                id: item.id,
-                                type: 'tv',
-                                recBy: [selected.id]
-                            }
-                        })
-                    })
-                }
+                    } else {
+                        // recommendation is new
+                        const mediaDetails = {
+                            title: item.title ? item.title : item.name,
+                            poster_path: item.poster_path ? item.poster_path : null,
+                            vote_average: item.vote_average,
+                            release_date: item.release_date ? new Date(item.first_air_date) : null,
+                            recBy: [selected.id.toString()]
+                        }
+                        showRef.set(mediaDetails)
+                    }
+                })
             })
         }).catch((error) => {Alert.alert(error)})
       }
@@ -121,51 +84,77 @@ export default function MediaScreen({ navigation }) {
                     title: selected.title ? selected.title : selected.name,
                     poster_path: selected.poster_path ? selected.poster_path : null,
                     vote_average: selected.vote_average,
-                    release_date: selected.release_date ? new Date(selected.release_date) : null,
+                    release_date: selected.release_date,
                 }
                 movieRef.set(mediaDetails)
                 .then(() => {
-                    recMoviesById(selected.id)
-                    navigation.goBack();
+                    // clear existing movies and shows
+                    dispatch({
+                        type: 'SET_MOVIES',
+                        item: []
+                    })
+                    dispatch({
+                        type: 'SET_LAST_MOVIE',
+                        item: null
+                    })
+                    dispatch({
+                        type: 'SET_SHOWS',
+                        item: []
+                    })
+                    dispatch({
+                        type: 'SET_LAST_SHOW',
+                        item: null
+                    })
                 }
-                ).catch(error => Alert.alert('failed to add movie: ' + error.message))
+                ).then(() => {
+                    recMoviesById(selected.id)
+                    navigation.push('Profile');
+                })
+                .catch(error => Alert.alert('failed to add movie: ' + error.message))
             }
         })
     }
 
     const addTv = e => {
-        if (shows.some(item => item.id === selected.id)) {
-            Alert.alert('This is already in your watched list');
-        } else {
-            e.preventDefault();
-            const newMedia = {}
-            const mediaDetails = {
-                name: selected.name? selected.name : null,
-                title: selected.title ? selected.title : null,
-                poster_path: selected.poster_path ? selected.poster_path : null,
-                vote_average: selected.vote_average,
-                release_date: selected.release_date ? selected.release_date : null,
-                type: 'tv'
+        e.preventDefault();
+        const movieRef = db.collection('users').doc(user.uid).collection('shows').doc(selected.id.toString());
+        movieRef.get().then((doc) => {
+            if (doc.exists) {
+                Alert.alert('This is already in your watched list');
+            } else {
+                const mediaDetails = {
+                    title: selected.title ? selected.title : selected.name,
+                    poster_path: selected.poster_path ? selected.poster_path : null,
+                    vote_average: selected.vote_average,
+                    release_date: selected.release_date,
+                }
+                movieRef.set(mediaDetails)
+                .then(() => {
+                    // clear existing movies and shows
+                    dispatch({
+                        type: 'SET_MOVIES',
+                        item: []
+                    })
+                    dispatch({
+                        type: 'SET_LAST_MOVIE',
+                        item: null
+                    })
+                    dispatch({
+                        type: 'SET_SHOWS',
+                        item: []
+                    })
+                    dispatch({
+                        type: 'SET_LAST_SHOW',
+                        item: null
+                    })
+                })
+                .then(() => {
+                    recShowsById(selected.id)
+                    navigation.push('Profile');
+                }
+                ).catch(error => Alert.alert('failed to add show: ' + error.message))
             }
-            newMedia['shows.' + selected.id] = mediaDetails 
-            db.collection('watched').doc(user.uid).update(newMedia).
-            then(() => {
-                dispatch({
-                    type: 'ADD_SHOW',
-                    item: {
-                        id: selected.id,
-                        name: selected.name? selected.name : null,
-                        title: selected.title ? selected.title : null,
-                        poster_path: selected.poster_path ? selected.poster_path : null,
-                        vote_average: selected.vote_average,
-                        release_date: selected.release_date ? selected.release_date : null,
-                        type: 'tv'
-                    }
-                });
-                recShowsById(selected.id)
-                navigation.goBack();
-            }).catch(error => Alert.alert(error.message))
-        }
+        })
     }
 
     const removeTv = e => {
@@ -217,48 +206,23 @@ export default function MediaScreen({ navigation }) {
 
     const removeMovie = e => {
         e.preventDefault();
-        const newMedia = {}
-        newMedia['movies.' + selected.id] = firebase.firestore.FieldValue.delete()
-        db.collection('watched').doc(user.uid).update(newMedia).then(() => {
-            dispatch({
-                type: "REMOVE_MOVIE",
-                id: selected.id
-            })
-        }).then(() => {
-            // update any recommended movies that were related to the movie being deleted
-            const recs = movieRecommendations.filter(item => item.recBy.includes(selected.id))
-            recs.forEach(function(rec) {
-                if (rec.recBy.length === 1) {
-                    // when the recommended movie should be removed
-                    const newRec = {}
-                    newRec['movieRecs.' + rec.id] = firebase.firestore.FieldValue.delete()
-                    db.collection('recs').doc(user.uid).update(newRec)
-                    .then(() => {
-                        dispatch({
-                            type: "DELETE_MOVIE_REC",
-                            id: rec.id
-                        })
+        const movieRef = db.collection('users').doc(user.uid).collection('movies').doc(selected.id.toString());
+        movieRef.get().then((doc) => {
+            if (doc.exists) {
+                // movie actually exists in watched list
+                movieRef.delete().then(() => {
+                    // update recommendations
+                    db.collection('users').doc(user.uid).collection('movieRecs')
+                    .where('recBy', 'array-contains', selected.id.toString()).get().then((recs) => {
+                        // TODO
+                        console.log(recs)
                     })
-                } else {
-                    // when the recommended movie should be updated
-                    const newRec = {}
-                    const curIndex = rec.recBy.findIndex(function(m) {
-                        return m === selected.id
-                    })
-                    if (curIndex > -1) {
-                        rec.recBy.splice(curIndex, 1)
-                    }
-                    newRec['movieRecs.' + rec.id] = rec.recBy
-                    db.collection('recs').doc(user.uid).update(newRec).then(
-                        dispatch({
-                            type: "REMOVE_MOVIE_REC",
-                            item: [rec.id, selected.id]
-                        })
-                    )
-                }
-            })
-            navigation.goBack();
-        }).catch(error => Alert.alert(error.message))
+                }).catch(error => Alert.alert('Movie failed to delete: ' + error.message))
+            } else {
+                // movie does not exist in watched list, something went wrong
+                Alert.alert('Movie does not exist in your watched list')
+            }
+        })
     }
 
     return (

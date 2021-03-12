@@ -1,6 +1,6 @@
-import React, { useCallback } from 'react'
-import { View, Text, Image, StyleSheet, TouchableOpacity, SafeAreaView, FlatList } from "react-native"
-import { auth } from "./firebaseConfig"
+import React, { useCallback, useEffect, useState } from 'react'
+import { View, Text, Image, StyleSheet, TouchableOpacity, SafeAreaView, FlatList, Alert } from "react-native"
+import { auth, db } from "./firebaseConfig"
 import { useStateValue } from './StateProvider'
 import { IconButton, Colors } from 'react-native-paper'
 import ResultBox from './components/ResultBox'
@@ -14,7 +14,10 @@ import { Flow } from 'react-native-animated-spinkit'
 
 export default function Profile({ navigation }) {
     const flatListRef = React.useRef()
-    const [{ user, firstname, lastname, unsubscribe, shows, movies, reverseOrder, showRecommendations, movieRecommendations, ready }, dispatch] = useStateValue();
+    const [{ user, firstname, lastname, shows, movies, reverseOrder, showRecommendations, movieRecommendations, lastMovieDoc, lastShowDoc }, dispatch] = useStateValue();
+    
+    const [loadingMovie, setLoadingMovie] = useState(false);
+    const [loadingShow, setLoadingShow] = useState(false);
 
     // const [scrollHeight, setScrollHeight] = useState(0);
     // const [contentHeight, setContentHeight] = useState(0);
@@ -68,26 +71,29 @@ export default function Profile({ navigation }) {
         })
     }
 
-    const fillRecommendations = () => {
-        const topRecs = [...movieRecommendations.filter(movie => !(movies.some(item => item.id === parseInt(movie.id)))),
-            ...showRecommendations.filter(show => !(shows.some(item => item.id === parseInt(show.id))))]
-            .sort(CompareMatch).splice(0, Math.min(30, movieRecommendations.length + showRecommendations.length))
-        topRecs.forEach(function(media) {
-            if (media.type === 'tv') {
-                searchShowById(media.id)
-            } else {
-                searchMovieById(media.id)
-            }
-        })
-    }
+    // const fillRecommendations = () => {
+    //     const topRecs = [...movieRecommendations.filter(movie => !(movies.some(item => item.id === parseInt(movie.id)))),
+    //         ...showRecommendations.filter(show => !(shows.some(item => item.id === parseInt(show.id))))]
+    //         .sort(CompareMatch).splice(0, Math.min(30, movieRecommendations.length + showRecommendations.length))
+    //     topRecs.forEach(function(media) {
+    //         if (media.type === 'tv') {
+    //             searchShowById(media.id)
+    //         } else {
+    //             searchMovieById(media.id)
+    //         }
+    //     })
+    // }
 
     const logout = () => {
         if (user) {
-            // unsubscribe();
             auth.signOut().then(() => {
                 setTimeout(function(){
+                    dispatch({
+                        type: "SET_USER",
+                        user: null
+                    })
                     dispatch({type: 'CLEAR_CONTENT'})
-                    dispatch({type: 'SET_READY'})
+                    // dispatch({type: 'SET_READY'})
                 }, 500)
             })
         }
@@ -101,10 +107,107 @@ export default function Profile({ navigation }) {
         </TransitionView>
         , []
     );
+    const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
+        const paddingToBottom = 20;
+      
+        return (
+          layoutMeasurement.height + contentOffset.y >=
+          contentSize.height - paddingToBottom
+        );
+      };
+
+    const updateMedia = (contentType) => {
+        if (contentType === 'movies') {
+            setLoadingMovie(true)
+        } else {
+            setLoadingShow(true)
+        }
+        const mediaRef = db.collection('users').doc(user.uid).collection(contentType).orderBy('release_date', 'desc').limit(12);
+        if ((contentType === 'movies' ? lastMovieDoc : lastShowDoc)) {
+            mediaRef.startAfter(contentType === 'movies' ? lastMovieDoc : lastShowDoc).get().then((data) => {
+                if (data) {
+                    const contents = data.docs;
+                    if (contents.length > 0) {
+                        dispatch({
+                            type: contentType === 'movies' ? 'SET_LAST_MOVIE' : 'SET_LAST_SHOW',
+                            item: data.docs[data.docs.length - 1]
+                        })
+    
+                        data.docs.forEach(function(doc) {
+                            const details = doc.data()
+                            dispatch({
+                                type: contentType === 'movies' ? 'ADD_MOVIE' : 'ADD_SHOW',
+                                item: {
+                                    id: doc.id,
+                                    title: details.title,
+                                    poster_path: details.poster_path,
+                                    vote_average: details.vote_average,
+                                    release_date: details.release_date,
+                                }
+                            })
+                        })
+                    } else {
+                        dispatch({
+                            type: contentType === 'movies' ? 'SET_LAST_MOVIE' : 'SET_LAST_SHOW',
+                            item: null
+                        })
+                    }
+                    
+                }
+            }).then(() => {
+                if (contentType === 'movies') {
+                    setLoadingMovie(true)
+                } else {
+                    setLoadingShow(true)
+                }
+            })
+            .catch((err) => { Alert.alert('failed to retrieve ' + contentType + ': ' + err.message) })
+        } else {
+            mediaRef.get().then((data) => {
+                if (data) {
+                    const contents = data.docs;
+                    if (contents.length > 0) {
+                        dispatch({
+                            type: contentType === 'movies' ? 'SET_LAST_MOVIE' : 'SET_LAST_SHOW',
+                            item: data.docs[data.docs.length - 1]
+                        })
+    
+                        data.docs.forEach(function(doc) {
+                            const details = doc.data()
+                            dispatch({
+                                type: contentType === 'movies' ? 'ADD_MOVIE' : 'ADD_SHOW',
+                                item: {
+                                    id: doc.id,
+                                    title: details.title,
+                                    poster_path: details.poster_path,
+                                    vote_average: details.vote_average,
+                                    release_date: details.release_date,
+                                }
+                            })
+                        })
+                    }
+                }
+              }).then(() => {
+                if (contentType === 'movies') {
+                    setLoadingMovie(false)
+                } else {
+                    setLoadingShow(false)
+                }
+              })
+              .catch((err) => { Alert.alert('failed to retrieve ' + contentType + ': ' + err.message) })
+        }
+    }
+
+    useEffect(() => {
+        if (user) { // when user is logged in
+          updateMedia('movies');
+          updateMedia('shows');
+        }
+      }, [user]);
     
     return (
         <View style={styles.container}>
-            {ready ? (
+            {user ? (
                 <TransitionScreen>
                     <MaskedView 
                         style={styles.maskContainerTop}
@@ -128,6 +231,16 @@ export default function Profile({ navigation }) {
                                 style={{ paddingTop: 10, width: '100%' }}
                                 contentContainerStyle={styles.contentContainerStyle}
                                 showsVerticalScrollIndicator={false}
+                                onScroll={({ nativeEvent }) => {
+                                    if (isCloseToBottom(nativeEvent)) {
+                                      if (!loadingMovie && lastMovieDoc) {
+                                        updateMedia('movies');
+                                      }
+                                      if (!loadingShow && lastShowDoc) {
+                                        updateMedia('shows');
+                                      }
+                                    }
+                                }}
                                 // onLayout={(event) => {
                                 //     var {x, y, width, height} = event.nativeEvent.layout;
                                 //     setScrollHeight(height)
@@ -174,7 +287,7 @@ export default function Profile({ navigation }) {
                         }
                         }/>
                     <IconButton style={styles.homeButton} icon="home" color={Colors.white} size={35} onPress={() => {
-                        fillRecommendations();
+                        // fillRecommendations();
                         dispatch({
                             type: "SET_INSEARCH"
                         });

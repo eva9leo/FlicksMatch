@@ -7,7 +7,6 @@ export const initialState = {
     movies: [],
     firstname: null,
     lastname: null,
-    unsubscribe: null,
     insearch: false,
     ready: false,
     orderBy: 'date',
@@ -16,10 +15,20 @@ export const initialState = {
     searchReverseOrder: false,
     movieRecommendations: [],
     showRecommendations: [],
+    lastMovieDoc: null,
+    lastShowDoc: null,
 };
 
 export default function reducer(state, action) {
     switch(action.type) {
+        case "SET_LAST_MOVIE": return {
+            ...state,
+            lastMovieDoc: action.item
+        }
+        case "SET_LAST_SHOW": return {
+            ...state,
+            lastShowDoc: action.item
+        }
         case 'CLEAR_RECOMMENDATIONS':
             return {
                 ...state,
@@ -70,7 +79,7 @@ export default function reducer(state, action) {
                 ...state,
                 shows: action.item
             }
-        case "SET_MOVIE":
+        case "SET_MOVIES":
             return {
                 ...state,
                 movies: action.item
@@ -166,6 +175,8 @@ export default function reducer(state, action) {
                 shows: [],
                 movieRecommendations: [],
                 showRecommendations: [],
+                lastMovieDoc: null,
+                lastShowDoc: null,
             }
         case "CLEAR_SEARCHES":
             return {
@@ -182,11 +193,6 @@ export default function reducer(state, action) {
                 ...state,
                 firstname: action.item[0],
                 lastname: action.item[1]
-            }
-        case "SET_UNSUBSCRIBE":
-            return {
-                ...state,
-                unsubscribe: action.item
             }
         default:
             return state;

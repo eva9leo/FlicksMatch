@@ -62,6 +62,9 @@ class MediaDetail extends Component {
                                     <Text style={{ fontSize: 30, fontWeight: 'bold', width: '75%' }} >
                                         {this.props.selected.title ? this.props.selected.title : this.props.selected.name}
                                     </Text>
+                                    {
+                                        this.props.selected.release_date ? (<Text>{this.props.selected.release_date.toString()}</Text>) : (<></>)
+                                    }
                                     {this.props.selected.vote_average > 0 ? (
                                         <AnimatedCircularProgress
                                             size={50}

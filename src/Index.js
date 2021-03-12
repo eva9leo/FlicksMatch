@@ -42,99 +42,28 @@ export default function Index() {
     });
   }, []);
 
-  useEffect(() => {
-    if (user) { // when user is logged in
-      db.collection('watched').doc(user.uid).get().then((doc) => {  // get user watched list
-        if (doc) {
-          dispatch({ type: 'SET_READY' })
-          const userData = doc.data();
-          for (const movie in userData.movies) {
-            dispatch({
-              type: 'ADD_MOVIE',
-              item: {
-                id: parseInt(movie),
-                type: 'movie',
-                name: userData.movies[movie]['name'],
-                title: userData.movies[movie]['title'],
-                poster_path: userData.movies[movie]['poster_path'],
-                vote_average: userData.movies[movie]['vote_average'],
-                release_date: userData.movies[movie]['release_date'],
-              }
-            })
-          }
-
-          for (const show in userData.shows) {
-            dispatch({
-              type: 'ADD_SHOW',
-              item: {
-                id: parseInt(show),
-                type: 'tv',
-                name: userData.shows[show]['name'],
-                title: userData.shows[show]['title'],
-                poster_path: userData.shows[show]['poster_path'],
-                vote_average: userData.shows[show]['vote_average'],
-                release_date: userData.shows[show]['release_date'],
-              }
-            })
-          }
-        }
-      }).then(() => {
-        // get recommendation list
-        db.collection('recs').doc(user.uid).get().then((doc) => {
-          if (doc) {
-            const userData = doc.data()
-            for (const rec in userData.movieRecs) {
-              dispatch({
-                type: "ADD_MOVIE_REC",
-                item: {
-                  id: rec,
-                  type: 'movie',
-                  recBy: userData.movieRecs[rec.toString()]
-                }
-              })
-            }
-            for (const rec in userData.showRecs) {
-              dispatch({
-                type: "ADD_SHOW_REC",
-                item: {
-                  id: rec,
-                  type: 'tv',
-                  recBy: userData.showRecs[rec.toString()]
-                }
-              })
-            }
-          }
-        })
-      })
-      .catch((error) => {
-        console.log("Error getting document", error)
-      })
-      // const unsubscribe = db.collection('users').doc(user.uid).onSnapshot((doc) => {
-      //   if (doc) {
-      //     const userData = doc.data();
-      //     // set user first name and last name
-      //     dispatch({
-      //       type: "SET_NAME",
-      //       item: [userData.firstName? userData.firstName : null, userData.lastName? userData.lastName : null]
-      //     });
-      //     dispatch({
-      //       type: "SET_MOVIES",
-      //       item: userData.movies ? userData.movies : []
-      //     })
-      //     dispatch({
-      //       type: "SET_SHOWS",
-      //       item: userData.shows ? userData.shows : []
-      //     })
-      //     console.log(userData)
-      //   }
-      // });
-
-      // dispatch({
-      //   type: "SET_UNSUBSCRIBE",
-      //   item: unsubscribe
-      // });
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   if (user) { // when user is logged in
+  //     dispatch({ type: 'SET_READY' })
+  //     const userRef = db.collection('users').doc(user.uid);
+  //     userRef.collection('shows').orderBy('release_date', 'desc').limit(21).get((data) => {
+  //       if (data) {
+  //         data.docs.forEach(function(doc) {
+  //           // TODO
+  //           console.log(doc.id)
+  //         })
+  //       }
+  //     })
+  //     userRef.collection('movies').orderBy('release_date', 'desc').limit(21).onSnapshot((doc) => {
+  //       if (doc) {
+  //         doc.docs.forEach(function(doc) {
+  //           // TODO
+  //           console.log(doc.id)
+  //         })
+  //       }
+  //     })
+  //   }
+  // }, [user]);
 
   return (
       <NavigationContainer>
