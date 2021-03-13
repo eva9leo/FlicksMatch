@@ -39,7 +39,10 @@ export default function MediaScreen({ navigation }) {
                 }
             })
         })
-      }).catch((error) => {Alert.alert(error)})
+      }).then(() => {
+        navigation.goBack();
+        })
+      .catch((error) => {Alert.alert(error)})
     }
 
     const recShowsById = async (showId) => {
@@ -70,7 +73,10 @@ export default function MediaScreen({ navigation }) {
                     }
                 })
             })
-        }).catch((error) => {Alert.alert(error)})
+        }).then(() => {
+            navigation.goBack();
+        })
+        .catch((error) => {Alert.alert(error)})
       }
 
     const addMovie = e => {
@@ -105,10 +111,14 @@ export default function MediaScreen({ navigation }) {
                         type: 'SET_LAST_SHOW',
                         item: null
                     })
+                    recMoviesById(selected.id)
                 }
                 ).then(() => {
-                    recMoviesById(selected.id)
-                    navigation.push('Profile');
+                    dispatch({
+                        type: 'SET_REFRESHPROFILE',
+                        item: true
+                    })
+                    // navigation.goBack();
                 })
                 .catch(error => Alert.alert('failed to add movie: ' + error.message))
             }
@@ -147,10 +157,15 @@ export default function MediaScreen({ navigation }) {
                         type: 'SET_LAST_SHOW',
                         item: null
                     })
+                    recShowsById(selected.id)
                 })
                 .then(() => {
-                    recShowsById(selected.id)
-                    navigation.push('Profile');
+                    dispatch({
+                        type: 'SET_REFRESHPROFILE',
+                        item: true
+                    })
+                    
+                    navigation.goBack();
                 }
                 ).catch(error => Alert.alert('failed to add show: ' + error.message))
             }
@@ -159,49 +174,78 @@ export default function MediaScreen({ navigation }) {
 
     const removeTv = e => {
         e.preventDefault();
-        const newMedia = {}
-        newMedia['shows.' + selected.id] = firebase.firestore.FieldValue.delete()
-        db.collection('watched').doc(user.uid).update(newMedia)
-        .then(() => {
-            dispatch({
-                type: "REMOVE_SHOW",
-                id: selected.id
-            })
-        }).then(() => {
-            // update any recommended shows that were related to the show being deleted
-            const recs = showRecommendations.filter(item => item.recBy.includes(selected.id))
-            recs.forEach(function(rec) {
-                if (rec.recBy.length === 1) {
-                    // when the recommended show should be removed
-                    const newRec = {}
-                    newRec['showRecs.' + rec.id] = firebase.firestore.FieldValue.delete()
-                    db.collection('recs').doc(user.uid).update(newRec)
-                    .then(() => {
-                        dispatch({
-                            type: "DELETE_SHOW_REC",
-                            id: rec.id
-                        })
+        const movieRef = db.collection('users').doc(user.uid).collection('shows').doc(selected.id.toString());
+        movieRef.get().then((doc) => {
+            if (doc.exists) {
+                // movie actually exists in watched list
+                movieRef.delete().then(() => {
+                    // update recommendations
+                    db.collection('users').doc(user.uid).collection('showRecs')
+                    .where('recBy', 'array-contains', selected.id.toString()).get().then((data) => {
+                        if (data) {
+                            const recs = data.docs;
+                            recs.forEach(function(rec){
+                                const details = rec.data()
+                                if (details.recBy.length === 1) { // recommendation needs to be deleted
+                                    db.collection('users').doc(user.uid).collection('showRecs').doc(rec.id.toString()).delete();
+                                } else { // needs to be updated
+                                    db.collection('users').doc(user.uid).collection('showRecs').doc(rec.id.toString()).update({
+                                        'recBy' : details.recBy.filter(movie => movie !== selected.id.toString())
+                                    })
+                                }
+                            })
+                        }
                     })
-                } else {
-                    // when the recommended show should be updated
-                    const newRec = {}
-                    const curIndex = rec.recBy.findIndex(function(m) {
-                        return m === selected.id
-                    })
-                    if (curIndex > -1) {
-                        rec.recBy.splice(curIndex, 1)
-                    }
-                    newRec['showRecs.' + rec.id] = rec.recBy
-                    db.collection('recs').doc(user.uid).update(newRec).then(
-                        dispatch({
-                            type: "REMOVE_SHOW_REC",
-                            item: [rec.id, selected.id]
-                        })
-                    )
-                }
-            })
-            navigation.goBack();
-        }).catch(error => Alert.alert(error.message))
+                }).catch(error => Alert.alert('Show failed to delete: ' + error.message))
+            } else {
+                // movie does not exist in watched list, something went wrong
+                Alert.alert('Show does not exist in your watched list')
+            }
+        })
+        // e.preventDefault();
+        // const newMedia = {}
+        // newMedia['shows.' + selected.id] = firebase.firestore.FieldValue.delete()
+        // db.collection('watched').doc(user.uid).update(newMedia)
+        // .then(() => {
+        //     dispatch({
+        //         type: "REMOVE_SHOW",
+        //         id: selected.id
+        //     })
+        // }).then(() => {
+        //     // update any recommended shows that were related to the show being deleted
+        //     const recs = showRecommendations.filter(item => item.recBy.includes(selected.id))
+        //     recs.forEach(function(rec) {
+        //         if (rec.recBy.length === 1) {
+        //             // when the recommended show should be removed
+        //             const newRec = {}
+        //             newRec['showRecs.' + rec.id] = firebase.firestore.FieldValue.delete()
+        //             db.collection('recs').doc(user.uid).update(newRec)
+        //             .then(() => {
+        //                 dispatch({
+        //                     type: "DELETE_SHOW_REC",
+        //                     id: rec.id
+        //                 })
+        //             })
+        //         } else {
+        //             // when the recommended show should be updated
+        //             const newRec = {}
+        //             const curIndex = rec.recBy.findIndex(function(m) {
+        //                 return m === selected.id
+        //             })
+        //             if (curIndex > -1) {
+        //                 rec.recBy.splice(curIndex, 1)
+        //             }
+        //             newRec['showRecs.' + rec.id] = rec.recBy
+        //             db.collection('recs').doc(user.uid).update(newRec).then(
+        //                 dispatch({
+        //                     type: "REMOVE_SHOW_REC",
+        //                     item: [rec.id, selected.id]
+        //                 })
+        //             )
+        //         }
+        //     })
+        //     navigation.goBack();
+        // }).catch(error => Alert.alert(error.message))
     }
 
     const removeMovie = e => {

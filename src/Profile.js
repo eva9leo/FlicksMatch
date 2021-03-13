@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { View, Text, Image, StyleSheet, TouchableOpacity, SafeAreaView, FlatList, Alert } from "react-native"
+import { View, Text, Image, StyleSheet, TouchableOpacity, SafeAreaView, FlatList, Alert, Dimensions } from "react-native"
 import { auth, db } from "./firebaseConfig"
 import { useStateValue } from './StateProvider'
 import { IconButton, Colors } from 'react-native-paper'
@@ -13,8 +13,10 @@ import { CompareDates, ReversedCompareDates, CompareMatch } from './helpers';
 import { Flow } from 'react-native-animated-spinkit'
 
 export default function Profile({ navigation }) {
+    const screenHeight = Dimensions.get('screen').height;
+
     const flatListRef = React.useRef()
-    const [{ user, firstname, lastname, shows, movies, reverseOrder, showRecommendations, movieRecommendations, lastMovieDoc, lastShowDoc }, dispatch] = useStateValue();
+    const [{ user, firstname, lastname, shows, movies, reverseOrder, refreshProfile, lastMovieDoc, lastShowDoc }, dispatch] = useStateValue();
     
     const [loadingMovie, setLoadingMovie] = useState(false);
     const [loadingShow, setLoadingShow] = useState(false);
@@ -108,11 +110,12 @@ export default function Profile({ navigation }) {
         , []
     );
     const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
-        const paddingToBottom = 20;
-      
+        // console.log('layoutMeasurement.height: ' + layoutMeasurement.height)
+        // console.log('contentOffset.y: ' + contentOffset.y)
+        // console.log()
         return (
           layoutMeasurement.height + contentOffset.y >=
-          contentSize.height - paddingToBottom
+          contentSize.height - 4 * screenHeight
         );
       };
 
@@ -122,7 +125,7 @@ export default function Profile({ navigation }) {
         } else {
             setLoadingShow(true)
         }
-        const mediaRef = db.collection('users').doc(user.uid).collection(contentType).orderBy('release_date', 'desc').limit(12);
+        const mediaRef = db.collection('users').doc(user.uid).collection(contentType).orderBy('release_date', 'desc').limit(21);
         if ((contentType === 'movies' ? lastMovieDoc : lastShowDoc)) {
             mediaRef.startAfter(contentType === 'movies' ? lastMovieDoc : lastShowDoc).get().then((data) => {
                 if (data) {
@@ -202,10 +205,16 @@ export default function Profile({ navigation }) {
 
     useEffect(() => {
         if (user) { // when user is logged in
-          updateMedia('movies');
-          updateMedia('shows');
+            if (refreshProfile) {
+                updateMedia('movies');
+                updateMedia('shows');
+                dispatch({
+                    type: 'SET_REFRESHPROFILE',
+                    item: false
+                })
+            }
         }
-      }, [user]);
+      }, [refreshProfile]);
     
     return (
         <View style={styles.container}>

@@ -17,14 +17,21 @@ export const initialState = {
     showRecommendations: [],
     lastMovieDoc: null,
     lastShowDoc: null,
+    refreshProfile: false,
 };
 
 export default function reducer(state, action) {
     switch(action.type) {
-        case "SET_LAST_MOVIE": return {
-            ...state,
-            lastMovieDoc: action.item
-        }
+        case "SET_REFRESHPROFILE": 
+            return {
+                ...state,
+                refreshProfile: action.item
+            }
+        case "SET_LAST_MOVIE": 
+            return {
+                ...state,
+                lastMovieDoc: action.item
+            }
         case "SET_LAST_SHOW": return {
             ...state,
             lastShowDoc: action.item

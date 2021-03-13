@@ -25,6 +25,10 @@ export default function Index() {
           type: 'SET_USER',
           user: authUser
         });
+        dispatch({
+          type: 'SET_REFRESHPROFILE',
+          item: true
+        });
       } else {
         dispatch({
           type: 'SET_USER',
