@@ -143,6 +143,7 @@ export default function Profile({ navigation }) {
                                     poster_path: details.poster_path,
                                     vote_average: details.vote_average,
                                     release_date: details.release_date,
+                                    type: contentType === 'movies' ? 'movie' : 'tv',
                                 }
                             })
                         })
@@ -182,6 +183,7 @@ export default function Profile({ navigation }) {
                                     poster_path: details.poster_path,
                                     vote_average: details.vote_average,
                                     release_date: details.release_date,
+                                    type: contentType === 'movies' ? 'movie' : 'tv',
                                 }
                             })
                         })
